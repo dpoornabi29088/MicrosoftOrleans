@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{FBC9443E-9EE3-40DE-A863-E7DF7C3568A8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{7A667282-9973-4C4C-97BC-59E56FAD2AC0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{6455F193-EA05-46A2-8B1D-BDA7B4B2A458}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SiloHost", "SiloHost", "{C104C7F4-7031-4A66-B7B5-CC9DB9C5668D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{AE417919-E368-41DD-BA71-2AD889D7C24B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftOrleans.Domain", "MicrosoftOrleans.Domain\MicrosoftOrleans.Domain.csproj", "{D6A8C541-3075-4125-BC4F-2A74E88CFE5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftOrleans.Infrastructure", "MicrosoftOrleans.Infrastructure\MicrosoftOrleans.Infrastructure.csproj", "{63111FED-9AA4-4835-9487-DF8C139E69A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftOrleans.SiloHost", "MicrosoftOrleans.SiloHost\MicrosoftOrleans.SiloHost.csproj", "{D0E68078-FA89-4F7C-A109-4BAA17792A84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftOrleans.Client", "MicrosoftOrleans.Client\MicrosoftOrleans.Client.csproj", "{90F64516-7982-4996-9A56-1A662237C81D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftOrleans.Application", "MicrosoftOrleans.Application\MicrosoftOrleans.Application.csproj", "{099D53C4-9C89-403C-B7E4-A3AE0459878E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6A8C541-3075-4125-BC4F-2A74E88CFE5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6A8C541-3075-4125-BC4F-2A74E88CFE5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6A8C541-3075-4125-BC4F-2A74E88CFE5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6A8C541-3075-4125-BC4F-2A74E88CFE5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63111FED-9AA4-4835-9487-DF8C139E69A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63111FED-9AA4-4835-9487-DF8C139E69A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63111FED-9AA4-4835-9487-DF8C139E69A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63111FED-9AA4-4835-9487-DF8C139E69A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0E68078-FA89-4F7C-A109-4BAA17792A84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0E68078-FA89-4F7C-A109-4BAA17792A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0E68078-FA89-4F7C-A109-4BAA17792A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0E68078-FA89-4F7C-A109-4BAA17792A84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90F64516-7982-4996-9A56-1A662237C81D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90F64516-7982-4996-9A56-1A662237C81D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90F64516-7982-4996-9A56-1A662237C81D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90F64516-7982-4996-9A56-1A662237C81D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{099D53C4-9C89-403C-B7E4-A3AE0459878E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{099D53C4-9C89-403C-B7E4-A3AE0459878E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{099D53C4-9C89-403C-B7E4-A3AE0459878E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{099D53C4-9C89-403C-B7E4-A3AE0459878E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D6A8C541-3075-4125-BC4F-2A74E88CFE5F} = {FBC9443E-9EE3-40DE-A863-E7DF7C3568A8}
+		{63111FED-9AA4-4835-9487-DF8C139E69A0} = {6455F193-EA05-46A2-8B1D-BDA7B4B2A458}
+		{D0E68078-FA89-4F7C-A109-4BAA17792A84} = {C104C7F4-7031-4A66-B7B5-CC9DB9C5668D}
+		{90F64516-7982-4996-9A56-1A662237C81D} = {AE417919-E368-41DD-BA71-2AD889D7C24B}
+		{099D53C4-9C89-403C-B7E4-A3AE0459878E} = {7A667282-9973-4C4C-97BC-59E56FAD2AC0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C58DDAB4-AADA-4A26-83E6-0014A8E77B36}
+	EndGlobalSection
+EndGlobal
