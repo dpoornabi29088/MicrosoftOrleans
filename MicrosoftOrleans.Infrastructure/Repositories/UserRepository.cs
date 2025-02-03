@@ -1,8 +1,8 @@
-﻿using MicrosoftOrleans.Domain.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using MicrosoftOrleans.Domain.Entities;
+using MicrosoftOrleans.Domain.Interfaces;
 
-namespace MicrosoftOrleans.Infrastructure.Repositories;
-{
-    public class UserRepository : IUserRepository
+public class UserRepository : IUserRepository
 {
     private readonly DbContext _context;
 
@@ -11,7 +11,7 @@ namespace MicrosoftOrleans.Infrastructure.Repositories;
         _context = context;
     }
 
-    public async Task<User> GetUserAsync(int userId)
+    public async Task<User> GetUserAsync(long userId)
     {
         return await _context.Set<User>().Include(u => u.Addresses).FirstOrDefaultAsync(u => u.Id == userId);
     }
@@ -28,7 +28,7 @@ namespace MicrosoftOrleans.Infrastructure.Repositories;
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteUserAsync(int userId)
+    public async Task DeleteUserAsync(long userId)
     {
         var user = await GetUserAsync(userId);
         if (user != null)

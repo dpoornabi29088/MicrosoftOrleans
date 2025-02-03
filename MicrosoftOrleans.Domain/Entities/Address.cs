@@ -6,6 +6,6 @@
         public string Street { get; set; }
         public string City { get; set; }
         public int Plaququ { get; set; }
-        public int UserId { get; set; }
+        public long UserId { get; set; }
     }
 }

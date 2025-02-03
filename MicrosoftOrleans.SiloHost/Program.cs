@@ -1,58 +1,59 @@
-﻿// Program.cs
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using MicrosoftOrleans.Domain.Interfaces;
-using MicrosoftOrleans.Infrastructure.Grains;
 using MicrosoftOrleans.Infrastructure.Repositories;
-using Orleans;
 using Orleans.Configuration;
-using Orleans.Hosting;
+using System.Net;
 
-namespace SiloHost
+internal class Program
 {
-    class Program
+    private static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
+
+        var host = new HostBuilder()
+    .UseOrleans((context, siloBuilder) =>
+    {
+        siloBuilder.Configure<ClusterOptions>(options =>
         {
-            var host = await StartSilo();
-            Console.WriteLine("Silo started. Press Enter to terminate...");
-            Console.ReadLine();
-            await host.StopAsync();
-        }
+            options.ClusterId = "dev";
+            options.ServiceId = "UserService";
+        });
 
-        private static async Task<ISiloHost> StartSilo()
+        siloBuilder.UseLocalhostClustering();
+        siloBuilder.Configure<EndpointOptions>(options =>
         {
-            var builder = new SiloHostBuilder()
-                .UseLocalhostClustering()
-                .Configure<ClusterOptions>(options =>
-                {
-                    options.ClusterId = "dev";
-                    options.ServiceId = "UserService";
-                })
-                .AddAdoNetGrainStorage("SqlStore", options =>
-                {
-                    options.Invariant = "System.Data.SqlClient";
-                    options.ConnectionString = "YourSqlConnectionStringHere";
-                })
-                .AddRedisGrainStorage("RedisStore", options =>
-                {
-                    options.ConnectionString = "YourRedisConnectionStringHere";
-                })
-                .ConfigureServices(services =>
-                {
-                    services.AddDbContext<DbContext>(options =>
-                        options.UseSqlServer("YourSqlConnectionStringHere"));
-                    services.AddTransient<IUserRepository, UserRepository>();
-                    services.AddTransient<IAddressRepository, AddressRepository>();
-                })
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(UserGrain).Assembly).WithReferences());
+            options.AdvertisedIPAddress = IPAddress.Loopback;
+            options.SiloPort = 11111;
+            options.GatewayPort = 30000;
+        });
 
-            var host = builder.Build();
+        siloBuilder.AddAdoNetGrainStorage("SqlStore", options =>
+        {
+            options.Invariant = "System.Data.SqlClient";
+            options.ConnectionString = "YourSqlConnectionStringHere";
+        });
 
-            await host.StartAsync();
+        //siloBuilder.AddRedisGrainStorage("RedisStore", options =>
+        //{
+        //    //options.CreateMultiplexer = () => Task.FromResult(ConnectionMultiplexer.Connect("localhost:6379"));
+        //});
 
-            return host;
-        }
+    })
+
+    .ConfigureServices(services =>
+    {
+        //services.AddDbContext<DbContext>(options => options.UseSqlServer("YourSqlConnectionStringHere"));
+        services.AddTransient<IUserRepository, UserRepository>();
+        services.AddTransient<IAddressRepository, AddressRepository>();
+    })
+    .ConfigureLogging(logging =>
+    {
+        logging.AddConsole();
+    })
+    .UseConsoleLifetime()
+    .Build();
+
+        await host.RunAsync();
     }
 }

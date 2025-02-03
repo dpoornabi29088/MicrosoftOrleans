@@ -1,12 +1,13 @@
-﻿using MicrosoftOrleans.Domain.Entities;
-
+﻿using MicrosoftOrleans.Application.Interfaces;
+using MicrosoftOrleans.Domain.Entities;
+using Orleans;
 namespace MicrosoftOrleans.Application.Services;
 
 public class UserService
 {
-    private readonly IGrainFactory _grainFactory;
+    private readonly Orleans.IGrainFactory _grainFactory;
 
-    public UserService(IGrainFactory grainFactory)
+    public UserService(Orleans.IGrainFactory grainFactory)
     {
         _grainFactory = grainFactory;
     }
