@@ -443,3 +443,9 @@ FodyWeavers.xsd
 /MicrosoftOrleans.SiloHost/obj/MicrosoftOrleans.SiloHost.csproj.nuget.g.targets
 /MicrosoftOrleans.SiloHost/obj/project.assets.json
 /MicrosoftOrleans.SiloHost/obj/project.nuget.cache
+/MicrosoftOrleans.Application/obj/Debug/net8.0/MicrosoftOrleans.Application.GeneratedMSBuildEditorConfig.editorconfig
+/MicrosoftOrleans.Domain/obj/Debug/net8.0/MicrosoftOrleans.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/MicrosoftOrleans.Infrastructure/obj/Debug/net8.0/MicrosoftOrleans.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/MicrosoftOrleans.Infrastructure/obj/MicrosoftOrleans.Infrastructure.csproj.nuget.g.targets
+/MicrosoftOrleans.Infrastructure/obj/Debug/net8.0/MicrosoftOrleans.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/MicrosoftOrleans.Infrastructure/obj/MicrosoftOrleans.Infrastructure.csproj.nuget.g.targets

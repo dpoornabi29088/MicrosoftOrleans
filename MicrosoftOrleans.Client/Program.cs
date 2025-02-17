@@ -1,3 +1,4 @@
+using MicrosoftOrleans.Application.Interfaces;
 using Orleans.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,20 +13,30 @@ builder.Host.UseOrleansClient(clientBuilder =>
     });
 
     clientBuilder.UseLocalhostClustering();
-    //clientBuilder.ConfigureServices(services => { services.AddSingleton<ITestGrain, TestGrain>(); });
 
 });
 
-//builder.Services.AddSingleton<IClusterClient>(sp => sp.GetService<IClusterClient>());
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
 
-//app.MapGet("/Add", (int value, IGrainFactory grainFactory) =>
-//{
-//    var testGrain = grainFactory.GetGrain<ITestGrain>("ITest");
-//    testGrain.AddInstruction(value);
+app.MapGet("/GetUser", (int value, IGrainFactory grainFactory) =>
+{
+    var userGrain = grainFactory.GetGrain<IUserGrain>(value);
+    userGrain.GetUserAsync();
 
-//});
+});
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        options.RoutePrefix = string.Empty;
+    });
+}
 
 app.Run();

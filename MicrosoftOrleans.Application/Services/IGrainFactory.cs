@@ -1,6 +1,6 @@
-﻿namespace MicrosoftOrleans.Application.Services
-{
-    internal interface IGrainFactory
-    {
-    }
-}
+﻿//namespace MicrosoftOrleans.Application.Services
+//{
+//    //internal interface IGrainFactory
+//    //{
+//    //}
+//}
