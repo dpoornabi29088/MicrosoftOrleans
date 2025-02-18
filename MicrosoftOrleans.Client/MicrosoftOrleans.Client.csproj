@@ -6,13 +6,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Orleans.Client" Version="8.1.0" />
+		<!--<PackageReference Include="Microsoft.Orleans.Client" Version="8.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Orleans.Sdk" Version="8.1.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />-->
+		<PackageReference Include="Microsoft.Orleans.Core" Version="8.1.0" />
+		<!--<PackageReference Include="Microsoft.Orleans.Hosting" Version="8.0.0" />-->
+		<PackageReference Include="Microsoft.Orleans.Client" Version="8.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\MicrosoftOrleans.Application\MicrosoftOrleans.Application.csproj" />
+	  <ProjectReference Include="..\MicrosoftOrleans.Domain\MicrosoftOrleans.Domain.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -9,11 +9,16 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
     <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="8.1.0" />
+    <PackageReference Include="Microsoft.Orleans.Sdk" Version="8.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MicrosoftOrleans.Application\MicrosoftOrleans.Application.csproj" />
     <ProjectReference Include="..\MicrosoftOrleans.Domain\MicrosoftOrleans.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Persistanse\" />
   </ItemGroup>
 
 </Project>

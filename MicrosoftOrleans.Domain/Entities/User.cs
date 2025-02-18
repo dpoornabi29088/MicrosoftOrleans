@@ -1,10 +1,19 @@
-﻿namespace MicrosoftOrleans.Domain.Entities
+﻿using Orleans;
+
+namespace MicrosoftOrleans.Domain.Entities;
+
+[GenerateSerializer]
+public class User
 {
-    public class User
-    {
-        public int Id { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public List<Address> Addresses { get; set; } = new List<Address>();
-    }
+    [Id(0)]
+    public int Id { get; set; }
+
+    [Id(1)]
+    public string UserName { get; set; }
+
+    [Id(2)]
+    public string Password { get; set; }
+
+    [Id(3)]
+    public List<Address> Addresses { get; set; } = new List<Address>();
 }
