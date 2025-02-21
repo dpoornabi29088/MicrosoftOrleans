@@ -449,3 +449,9 @@ FodyWeavers.xsd
 /MicrosoftOrleans.Infrastructure/obj/MicrosoftOrleans.Infrastructure.csproj.nuget.g.targets
 /MicrosoftOrleans.Infrastructure/obj/Debug/net8.0/MicrosoftOrleans.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
 /MicrosoftOrleans.Infrastructure/obj/MicrosoftOrleans.Infrastructure.csproj.nuget.g.targets
+/MicrosoftOrleans.Application/obj/Debug/net8.0/MicrosoftOrleans.Application.GlobalUsings.g.cs
+/MicrosoftOrleans.Application/obj/MicrosoftOrleans.Application.csproj.nuget.g.targets
+/MicrosoftOrleans.Infrastructure/obj/Debug/net8.0/MicrosoftOrleans.Infrastructure.GlobalUsings.g.cs
+/MicrosoftOrleans.Infrastructure/obj/Debug/net8.0/MicrosoftOrleans.Infrastructure.GlobalUsings.g.cs
+/MicrosoftOrleans.Application/obj/MicrosoftOrleans.Application.csproj.nuget.g.targets
+/MicrosoftOrleans.Application/obj/Debug/net8.0/MicrosoftOrleans.Application.GlobalUsings.g.cs

@@ -26,14 +26,14 @@ namespace MicrosoftOrleans.Infrastructure.Grains
         {
             await _userRepository.AddUserAsync(user);
             State = user;
-            //await WriteStateAsync();
+            await WriteStateAsync();
         }
 
         public async Task UpdateUserAsync(User user)
         {
             await _userRepository.UpdateUserAsync(user);
             State = user;
-            //await WriteStateAsync();
+            await WriteStateAsync();
         }
 
         public async Task DeleteUserAsync()

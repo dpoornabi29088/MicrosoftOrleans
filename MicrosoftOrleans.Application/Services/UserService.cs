@@ -1,6 +1,5 @@
 ﻿using MicrosoftOrleans.Application.Interfaces;
 using MicrosoftOrleans.Domain.Entities;
-using Orleans;
 namespace MicrosoftOrleans.Application.Services;
 
 public class UserService

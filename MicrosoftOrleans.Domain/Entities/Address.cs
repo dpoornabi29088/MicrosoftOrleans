@@ -3,7 +3,7 @@
 namespace MicrosoftOrleans.Domain.Entities;
 
 [GenerateSerializer]
-public class Address
+public sealed class Address
 {
     [Id(0)]
     public int Id { get; set; }

@@ -3,16 +3,16 @@
 namespace MicrosoftOrleans.Domain.Entities;
 
 [GenerateSerializer]
-public class User
+public sealed class User
 {
     [Id(0)]
     public int Id { get; set; }
 
     [Id(1)]
-    public string UserName { get; set; }
+    public required string UserName { get; set; }
 
     [Id(2)]
-    public string Password { get; set; }
+    public required string Password { get; set; }
 
     [Id(3)]
     public List<Address> Addresses { get; set; } = new List<Address>();
