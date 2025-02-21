@@ -1,3 +1,4 @@
+using MicrosoftOrleans.Application.Interfaces;
 using Orleans.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,12 +22,12 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-//app.MapGet("/GetUser", (int value, IGrainFactory grainFactory) =>
-//{
-//    var userGrain = grainFactory.GetGrain<IUserGrain>(value);
-//    userGrain.GetUserAsync();
+app.MapGet("/GetUser", (int value, IGrainFactory grainFactory) =>
+{
+    var userGrain = grainFactory.GetGrain<IUserGrain>(value);
+    userGrain.GetUserAsync();
 
-//});
+});
 
 if (app.Environment.IsDevelopment())
 {
