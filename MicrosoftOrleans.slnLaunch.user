@@ -7,7 +7,7 @@
         "Action": "Start"
       },
       {
-        "Path": "MicrosoftOrleans.Client\\MicrosoftOrleans.Api.csproj",
+        "Path": "MicrosoftOrleans.RestApi\\MicrosoftOrleans.RestApi.csproj",
         "Action": "Start"
       }
     ]

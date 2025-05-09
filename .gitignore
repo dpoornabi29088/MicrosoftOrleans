@@ -122,3 +122,6 @@
 /MicrosoftOrleans.Infrastructure/obj/Debug/net9.0
 /MicrosoftOrleans.SiloHost/bin/Debug/net9.0
 /MicrosoftOrleans.SiloHost/obj/Debug/net9.0
+/MicrosoftOrleans.RestApi/bin/Debug/net8.0
+/MicrosoftOrleans.RestApi/obj
+/MicrosoftOrleans.RestApi/logs
