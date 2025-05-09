@@ -113,3 +113,12 @@
 /MicrosoftOrleans.Application/obj
 /MicrosoftOrleans.Domain/obj
 /MicrosoftOrleans.Infrastructure/obj/Debug/net8.0
+/MicrosoftOrleans.Application/bin/Debug/net9.0
+/MicrosoftOrleans.Client/bin/Debug/net9.0
+/MicrosoftOrleans.Client/obj/Debug/net9.0
+/MicrosoftOrleans.Domain/bin/Debug/net9.0
+/MicrosoftOrleans.Domain/obj/MicrosoftOrleans.Domain.csproj.nuget.g.targets
+/MicrosoftOrleans.Infrastructure/bin/Debug/net9.0
+/MicrosoftOrleans.Infrastructure/obj/Debug/net9.0
+/MicrosoftOrleans.SiloHost/bin/Debug/net9.0
+/MicrosoftOrleans.SiloHost/obj/Debug/net9.0
