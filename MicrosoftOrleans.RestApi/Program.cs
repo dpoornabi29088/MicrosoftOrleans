@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using MicrosoftOrleans.Application.Interfaces;
 using Orleans.Configuration;
 using Serilog;
 
@@ -65,9 +67,10 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/AddUser", async ([FromServices] IGrainFactory grainFactory, int userId) =>
 {
-
+    var userGrain = grainFactory.GetGrain<IUserGrain>(userId);
+    return await userGrain.GetUserAsync();
 });
 
 app.Run();

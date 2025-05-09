@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MicrosoftOrleans.Infrastructure;
+using MicrosoftOrleans.Infrastructure.Persistence.Configurations;
 using Orleans.Configuration;
 using Serilog;
 
@@ -31,6 +34,14 @@ class Program
                             .UseSerilog()
                             .UseOrleans(builder =>
                             {
+                                var config = new ConfigurationBuilder()
+                                                .SetBasePath(Directory.GetCurrentDirectory())
+                                                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                                                .Build();
+
+                                string connectionString = config.GetSection("DatabaseSettings:ConnectionString").Value;
+
+
                                 builder.UseLocalhostClustering();
 
                                 builder.UseAdoNetClustering(options =>
@@ -44,6 +55,15 @@ class Program
                                     options.ClusterId = "us3";
                                     options.ServiceId = "myawesomeservice";
                                 });
+
+                                builder.ConfigureServices(services =>
+                                {
+                                    services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));
+
+                                    services.AddInfrastructureServices();
+
+                                });
+
                             });
 
         var host = hostBuilder.Build();
