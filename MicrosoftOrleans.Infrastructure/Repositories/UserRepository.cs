@@ -39,4 +39,14 @@ public class UserRepository : IUserRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public Task<User> GetUserAsync(long userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteUserAsync(long userId)
+    {
+        throw new NotImplementedException();
+    }
 }

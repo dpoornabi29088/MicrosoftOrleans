@@ -110,3 +110,6 @@
 /MicrosoftOrleans.Infrastructure/bin/Debug/net8.0
 /MicrosoftOrleans.Infrastructure/obj/MicrosoftOrleans.Infrastructure.csproj.nuget.g.props
 /MicrosoftOrleans.Infrastructure/obj/MicrosoftOrleans.Infrastructure.csproj.nuget.g.targets
+/MicrosoftOrleans.Application/obj
+/MicrosoftOrleans.Domain/obj
+/MicrosoftOrleans.Infrastructure/obj/Debug/net8.0
