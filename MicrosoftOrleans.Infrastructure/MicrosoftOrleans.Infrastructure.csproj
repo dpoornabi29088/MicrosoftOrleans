@@ -9,11 +9,17 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
     <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="9.0.1" />
+    <PackageReference Include="Microsoft.Orleans.OrleansHost" Version="1.5.10" />
+    <PackageReference Include="Microsoft.Orleans.Runtime" Version="8.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MicrosoftOrleans.Application\MicrosoftOrleans.Application.csproj" />
     <ProjectReference Include="..\MicrosoftOrleans.Domain\MicrosoftOrleans.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Grains\" />
   </ItemGroup>
 
 </Project>

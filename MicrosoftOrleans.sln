@@ -11,17 +11,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SiloHost", "SiloHost", "{C104C7F4-7031-4A66-B7B5-CC9DB9C5668D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{AE417919-E368-41DD-BA71-2AD889D7C24B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{AE417919-E368-41DD-BA71-2AD889D7C24B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftOrleans.Domain", "MicrosoftOrleans.Domain\MicrosoftOrleans.Domain.csproj", "{D6A8C541-3075-4125-BC4F-2A74E88CFE5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicrosoftOrleans.Domain", "MicrosoftOrleans.Domain\MicrosoftOrleans.Domain.csproj", "{D6A8C541-3075-4125-BC4F-2A74E88CFE5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftOrleans.Infrastructure", "MicrosoftOrleans.Infrastructure\MicrosoftOrleans.Infrastructure.csproj", "{63111FED-9AA4-4835-9487-DF8C139E69A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicrosoftOrleans.Infrastructure", "MicrosoftOrleans.Infrastructure\MicrosoftOrleans.Infrastructure.csproj", "{63111FED-9AA4-4835-9487-DF8C139E69A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftOrleans.SiloHost", "MicrosoftOrleans.SiloHost\MicrosoftOrleans.SiloHost.csproj", "{D0E68078-FA89-4F7C-A109-4BAA17792A84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicrosoftOrleans.SiloHost", "MicrosoftOrleans.SiloHost\MicrosoftOrleans.SiloHost.csproj", "{D0E68078-FA89-4F7C-A109-4BAA17792A84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftOrleans.Client", "MicrosoftOrleans.Client\MicrosoftOrleans.Client.csproj", "{90F64516-7982-4996-9A56-1A662237C81D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicrosoftOrleans.Api", "MicrosoftOrleans.Client\MicrosoftOrleans.Api.csproj", "{90F64516-7982-4996-9A56-1A662237C81D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftOrleans.Application", "MicrosoftOrleans.Application\MicrosoftOrleans.Application.csproj", "{099D53C4-9C89-403C-B7E4-A3AE0459878E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicrosoftOrleans.Application", "MicrosoftOrleans.Application\MicrosoftOrleans.Application.csproj", "{099D53C4-9C89-403C-B7E4-A3AE0459878E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,59 +1,58 @@
 ﻿// Program.cs
 using Microsoft.Extensions.DependencyInjection;
-using MicrosoftOrleans.Application.Services;
-using MicrosoftOrleans.Domain.Entities;
-using Orleans;
+using Microsoft.Extensions.Hosting;
 using Orleans.Configuration;
-using Orleans.Hosting;
+using Serilog;
 
-namespace Client
+namespace Client;
+
+class Program
 {
-    class Program
+    static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
-        {
-            using IClusterClient client = await ConnectClient();
-            var serviceProvider = new ServiceCollection()
-                .AddSingleton(client)
-                .AddTransient<UserService>()
-                .BuildServiceProvider();
+        Log.Logger = new LoggerConfiguration()
+              .Enrich.FromLogContext()
+              .Enrich.WithThreadId()
+              .Enrich.WithProcessName()
+              .Enrich.WithEnvironmentUserName()
+              .WriteTo.Console()
+              .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+              .CreateLogger();
 
-            var userService = serviceProvider.GetService<UserService>();
+        var services = new ServiceCollection();
 
-            // Example usage
-            var user = new User { Id = 1, UserName = "Davood123", Password = "123456" };
+        var client = await ConnectClient();
 
-            await userService.AddUserAsync(user);
+        var serviceProvider = services
+            .AddSingleton(client)
+            .AddLogging(loggingBuilder => loggingBuilder.AddSerilog())
+            .BuildServiceProvider();
 
-            var retrievedUser = await userService.GetUserAsync(1);
-            Console.WriteLine($"User: {retrievedUser.UserName}");
+        Console.WriteLine("Client connected. Press Enter to terminate...");
+        Console.ReadLine();
+    }
 
-            var address = new Address { Id = 1, Street = "123 Main St", City = "Anytown" };
-            await userService.AddAddressAsync(1, address);
+    private static async Task<IGrainFactory> ConnectClient()
+    {
+        using IHost host = new HostBuilder()
+                             .UseSerilog()
+                             .UseOrleansClient(clientBuilder =>
+                             {
+                                 clientBuilder.UseLocalhostClustering();
+                                 clientBuilder.Configure<ClusterOptions>(options =>
+                                 {
+                                     options.ClusterId = "us3";
+                                     options.ServiceId = "myawesomeservice";
+                                 });
 
-            var addresses = await userService.GetAddressesAsync(1);
-            foreach (var addr in addresses)
-            {
-                Console.WriteLine($"Address: {addr.Street}, {addr.City}");
-            }
 
-            Console.WriteLine("Client connected. Press Enter to terminate...");
-            Console.ReadLine();
-        }
+                             })
+                             .Build();
 
-        private static async Task<IClusterClient> ConnectClient()
-        {
-            var client = new ClientBuilder()
-                .UseLocalhostClustering()
-                .Configure<ClusterOptions>(options =>
-                {
-                    options.ClusterId = "dev";
-                    options.ServiceId = "UserService";
-                })
-                .Build();
+        await host.StartAsync();
 
-            await client.Connect();
-            return client;
-        }
+        IGrainFactory client = host.Services.GetRequiredService<IGrainFactory>();
+
+        return client;
     }
 }

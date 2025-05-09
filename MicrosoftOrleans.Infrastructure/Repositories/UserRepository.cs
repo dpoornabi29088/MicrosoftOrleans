@@ -1,8 +1,10 @@
-﻿using MicrosoftOrleans.Domain.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using MicrosoftOrleans.Domain.Entities;
+using MicrosoftOrleans.Domain.Interfaces;
 
 namespace MicrosoftOrleans.Infrastructure.Repositories;
-{
-    public class UserRepository : IUserRepository
+
+public class UserRepository : IUserRepository
 {
     private readonly DbContext _context;
 

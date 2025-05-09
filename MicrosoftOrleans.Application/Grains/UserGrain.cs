@@ -18,7 +18,7 @@ namespace MicrosoftOrleans.Infrastructure.Grains
 
         public async Task<User> GetUserAsync()
         {
-            State = await _userRepository.GetUserAsync(this.GetPrimaryKeyLong());
+            State = await _userRepository.GetUserAsync((int)this.GetPrimaryKeyLong());
             return State;
         }
 
@@ -26,21 +26,21 @@ namespace MicrosoftOrleans.Infrastructure.Grains
         {
             await _userRepository.AddUserAsync(user);
             State = user;
-            //await WriteStateAsync();
+            await WriteStateAsync();
         }
 
         public async Task UpdateUserAsync(User user)
         {
             await _userRepository.UpdateUserAsync(user);
             State = user;
-            //await WriteStateAsync();
+            await WriteStateAsync();
         }
 
         public async Task DeleteUserAsync()
         {
-            await _userRepository.DeleteUserAsync(this.GetPrimaryKeyLong());
+            await _userRepository.DeleteUserAsync((int)this.GetPrimaryKeyLong());
             State = null;
-            //await WriteStateAsync();
+            await WriteStateAsync();
         }
 
         public async Task<List<Address>> GetAddressesAsync()
@@ -50,10 +50,10 @@ namespace MicrosoftOrleans.Infrastructure.Grains
 
         public async Task AddAddressAsync(Address address)
         {
-            address.UserId = this.GetPrimaryKeyLong();
+            address.UserId = (int)this.GetPrimaryKeyLong();
             await _addressRepository.AddAddressAsync(address);
             State.Addresses.Add(address);
-            //await WriteStateAsync();
+            await WriteStateAsync();
         }
 
         public async Task UpdateAddressAsync(Address address)
@@ -65,14 +65,14 @@ namespace MicrosoftOrleans.Infrastructure.Grains
                 existingAddress.Street = address.Street;
                 existingAddress.City = address.City;
             }
-            //await WriteStateAsync();
+            await WriteStateAsync();
         }
 
         public async Task DeleteAddressAsync(int addressId)
         {
             await _addressRepository.DeleteAddressAsync(addressId);
             State.Addresses.RemoveAll(a => a.Id == addressId);
-            //await WriteStateAsync();
+            await WriteStateAsync();
         }
     }
 }
