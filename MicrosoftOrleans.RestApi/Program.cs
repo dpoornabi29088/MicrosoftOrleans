@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Models;
 using Orleans.Configuration;
 using Serilog;
 
@@ -35,31 +36,38 @@ IGrainFactory client = host.Services.GetRequiredService<IGrainFactory>();
 builder.Services.AddSingleton(client);
 builder.Services.AddSerilog();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "MyOrleans API",
+        Version = "v1",
+        Description = "Orleans-based API Client",
+        Contact = new OpenApiContact
+        {
+            Name = "Davood",
+            Email = "davood@example.com",
+            Url = new Uri("https://myorleansapi.example.com")
+        }
+    });
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-
-var summaries = new[]
+if (app.Environment.IsDevelopment())
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyOrleans API v1");
+        c.RoutePrefix = string.Empty;
+    });
+}
 
 app.MapGet("/weatherforecast", () =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+
 });
 
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
