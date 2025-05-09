@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "MicrosoftOrleans.SiloHost\\MicrosoftOrleans.SiloHost.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "MicrosoftOrleans.Client\\MicrosoftOrleans.Api.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
