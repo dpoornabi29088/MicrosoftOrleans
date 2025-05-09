@@ -13,7 +13,7 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<User> GetUserAsync(int userId)
+    public async Task<User?> GetUserAsync(int userId)
     {
         return await _context.Set<User>().Include(u => u.Addresses).FirstOrDefaultAsync(u => u.Id == userId);
     }
@@ -38,15 +38,5 @@ public class UserRepository : IUserRepository
             _context.Set<User>().Remove(user);
             await _context.SaveChangesAsync();
         }
-    }
-
-    public Task<User> GetUserAsync(long userId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task DeleteUserAsync(long userId)
-    {
-        throw new NotImplementedException();
     }
 }
