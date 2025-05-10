@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MicrosoftOrleans.Domain.Entities;
 using MicrosoftOrleans.Domain.Interfaces;
+using MicrosoftOrleans.Infrastructure.Persistence;
 
 namespace MicrosoftOrleans.Infrastructure.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    private readonly DbContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public UserRepository(DbContext context)
+    public UserRepository(ApplicationDbContext context)
     {
         _context = context;
     }

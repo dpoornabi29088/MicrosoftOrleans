@@ -39,7 +39,7 @@ class Program
                                                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                                                 .Build();
 
-                                string connectionString = config.GetSection("DatabaseSettings:ConnectionString").Value;
+                                string connectionString = config.GetSection("DatabaseSettings:OrleansDB").Value;
 
 
                                 builder.UseLocalhostClustering();
@@ -47,7 +47,7 @@ class Program
                                 builder.UseAdoNetClustering(options =>
                                 {
                                     options.Invariant = "System.Data.SqlClient";
-                                    options.ConnectionString = "Server=164.138.22.154,57655;Database=Orleans;User Id=sa;Password=NeginSystem@1374#9128890105@@;";
+                                    options.ConnectionString = connectionString;
                                 });
 
                                 builder.Configure<ClusterOptions>(options =>
@@ -64,6 +64,12 @@ class Program
 
                                 });
 
+                                //builder.AddAdoNetGrainStorage("DefaultStorage", options =>
+                                //{
+                                //    options.Invariant = "System.Data.SqlClient";
+                                //    options.ConnectionString = connectionString;
+                                //});
+
                             });
 
         var host = hostBuilder.Build();
@@ -71,5 +77,6 @@ class Program
         await host.StartAsync();
 
         return host;
+
     }
 }

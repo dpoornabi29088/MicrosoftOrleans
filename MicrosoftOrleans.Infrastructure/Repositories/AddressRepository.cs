@@ -1,14 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MicrosoftOrleans.Domain.Entities;
+﻿using MicrosoftOrleans.Domain.Entities;
 using MicrosoftOrleans.Domain.Interfaces;
+using MicrosoftOrleans.Infrastructure.Persistence;
 
 namespace MicrosoftOrleans.Infrastructure.Repositories;
 
 public class AddressRepository : IAddressRepository
 {
-    private readonly DbContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public AddressRepository(DbContext context)
+    public AddressRepository(ApplicationDbContext context)
     {
         _context = context;
     }

@@ -21,13 +21,12 @@ using IHost host = new HostBuilder()
                             .UseOrleansClient(clientBuilder =>
                             {
                                 clientBuilder.UseLocalhostClustering();
+
                                 clientBuilder.Configure<ClusterOptions>(options =>
                                 {
                                     options.ClusterId = "us3";
                                     options.ServiceId = "myawesomeservice";
                                 });
-
-
                             })
                             .Build();
 
