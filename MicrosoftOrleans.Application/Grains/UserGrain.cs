@@ -2,23 +2,25 @@
 using MicrosoftOrleans.Domain.Entities;
 using MicrosoftOrleans.Domain.Interfaces;
 using Orleans;
+using Orleans.Providers;
 using Orleans.Runtime;
 
 namespace MicrosoftOrleans.Infrastructure.Grains
 {
+    [StorageProvider(ProviderName = "DefaultStorage")]
     public class UserGrain : Grain<User>, IUserGrain
     {
         private readonly IUserRepository _userRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IPersistentState<User> _userState;
 
-        public UserGrain([PersistentState("user", "DefaultStorage")] IPersistentState<User> userState,
+        public UserGrain(//[PersistentState("user", "DefaultStorage")] IPersistentState<User> userState,
             IUserRepository userRepository,
             IAddressRepository addressRepository)
         {
             _userRepository = userRepository;
             _addressRepository = addressRepository;
-            _userState = userState;
+            //_userState = userState;
         }
 
         public async Task<User> GetUserAsync()

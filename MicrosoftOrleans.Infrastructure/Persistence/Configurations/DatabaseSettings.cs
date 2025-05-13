@@ -2,5 +2,6 @@
 
 public class DatabaseSettings
 {
-    public string ConnectionString { get; set; }
+    public string? ProductionDB { get; set; }
+    public string? OrleansDB { get; set; }
 }

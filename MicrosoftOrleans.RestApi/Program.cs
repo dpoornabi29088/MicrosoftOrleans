@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using MicrosoftOrleans.Application.Interfaces;
+using MicrosoftOrleans.Infrastructure.Persistence.Configurations;
 using Orleans.Configuration;
 using Serilog;
 
@@ -15,6 +16,7 @@ Log.Logger = new LoggerConfiguration()
 
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));
 
 using IHost host = new HostBuilder()
                             .UseSerilog()

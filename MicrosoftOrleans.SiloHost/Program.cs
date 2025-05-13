@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using MicrosoftOrleans.Infrastructure;
 using MicrosoftOrleans.Infrastructure.Persistence.Configurations;
 using Orleans.Configuration;
@@ -13,6 +14,7 @@ class Program
     static async Task Main(string[] args)
     {
         Log.Logger = new LoggerConfiguration()
+                          .MinimumLevel.Debug()
                           .Enrich.FromLogContext()
                           .Enrich.WithThreadId()
                           .Enrich.WithProcessName()
@@ -34,6 +36,13 @@ class Program
                             .UseSerilog()
                             .UseOrleans(builder =>
                             {
+                                builder.ConfigureLogging(logging =>
+                                {
+                                    logging.AddConsole();
+                                    logging.SetMinimumLevel(LogLevel.Debug); // Capture detailed logs
+                                });
+
+
                                 var config = new ConfigurationBuilder()
                                                 .SetBasePath(Directory.GetCurrentDirectory())
                                                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -46,7 +55,7 @@ class Program
 
                                 builder.UseAdoNetClustering(options =>
                                 {
-                                    options.Invariant = "System.Data.SqlClient";
+                                    options.Invariant = "Microsoft.Data.SqlClient";
                                     options.ConnectionString = connectionString;
                                 });
 
@@ -64,13 +73,14 @@ class Program
 
                                 });
 
-                                //builder.AddAdoNetGrainStorage("DefaultStorage", options =>
-                                //{
-                                //    options.Invariant = "System.Data.SqlClient";
-                                //    options.ConnectionString = connectionString;
-                                //});
+                                builder.AddAdoNetGrainStorage("DefaultStorage", options =>
+                                {
+                                    options.Invariant = "Microsoft.Data.SqlClient";
+                                    options.ConnectionString = connectionString;
+                                });
 
                             });
+
 
         var host = hostBuilder.Build();
 
