@@ -126,3 +126,10 @@
 /MicrosoftOrleans.RestApi/obj
 /MicrosoftOrleans.RestApi/logs
 /MicrosoftOrleans.RestApi/bin/Debug/net9.0
+/MicrosoftOrleans.Application/bin/Release/net9.0
+/MicrosoftOrleans.Domain/bin/Release/net9.0
+/MicrosoftOrleans.Infrastructure/bin/Release/net9.0
+/MicrosoftOrleans.Infrastructure/obj/Release/net9.0
+/MicrosoftOrleans.RestApi/bin/Release/net9.0
+/MicrosoftOrleans.SiloHost/bin/Release/net9.0
+/MicrosoftOrleans.SiloHost/obj/Release/net9.0
