@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using MicrosoftOrleans.Application.Interfaces;
-using MicrosoftOrleans.Infrastructure.Persistence.Configurations;
 using Orleans.Configuration;
 using Serilog;
+using System.Text.Json.Serialization;
 
 Log.Logger = new LoggerConfiguration()
              .Enrich.FromLogContext()
@@ -16,7 +16,12 @@ Log.Logger = new LoggerConfiguration()
 
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));
+
+// Set JSON serializer options to ignore cycles
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 
 using IHost host = new HostBuilder()
                             .UseSerilog()

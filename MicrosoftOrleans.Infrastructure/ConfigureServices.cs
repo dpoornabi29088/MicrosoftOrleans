@@ -11,19 +11,15 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
-        var config = new ConfigurationBuilder()
+        var configuration = new ConfigurationBuilder()
                                                 .SetBasePath(Directory.GetCurrentDirectory())
                                                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                                                 .Build();
 
-        string connectionString = config.GetSection("DatabaseSettings:ProductionDB").Value;
-
         services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
         {
-            //var appSetting = serviceProvider.GetRequiredService<IOptions<DatabaseSettings>>().Value;
-
-            options.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
-            options.UseSqlServer(connectionString, sqlserverOptions =>
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            options.UseSqlServer(configuration.GetConnectionString("ProductionDB"), sqlserverOptions =>
             {
                 sqlserverOptions.CommandTimeout(360); // 3 minutes
                 sqlserverOptions.EnableRetryOnFailure(
@@ -34,7 +30,7 @@ public static class ConfigureServices
             });
         }, ServiceLifetime.Scoped);
 
-        // services.AddScoped<ApplicationDbContext>();
+        //services.AddScoped<ApplicationDbContext>();
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();

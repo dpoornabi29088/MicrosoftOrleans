@@ -14,13 +14,13 @@ namespace MicrosoftOrleans.Infrastructure.Grains
         private readonly IAddressRepository _addressRepository;
         private readonly IPersistentState<User> _userState;
 
-        public UserGrain(//[PersistentState("user", "DefaultStorage")] IPersistentState<User> userState,
+        public UserGrain([PersistentState("user", "DefaultStorage")] IPersistentState<User> userState,
             IUserRepository userRepository,
             IAddressRepository addressRepository)
         {
             _userRepository = userRepository;
             _addressRepository = addressRepository;
-            //_userState = userState;
+            _userState = userState;
         }
 
         public async Task<User> GetUserAsync()

@@ -1,22 +1,27 @@
 ﻿using Orleans;
+using System.Text.Json.Serialization;
 
 namespace MicrosoftOrleans.Domain.Entities;
 
 [GenerateSerializer]
-public sealed class Address
+public class Address
 {
     [Id(0)]
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     [Id(1)]
-    public string Street { get; set; }
+    public required string Street { get; set; }
 
     [Id(2)]
-    public string City { get; set; }
+    public required string City { get; set; }
 
     [Id(3)]
-    public int Plaququ { get; set; }
+    public required int Plaque { get; set; }
 
     [Id(4)]
-    public long UserId { get; set; }
+    public int UserId { get; set; }
+
+    [Id(5)]
+    [JsonIgnore]
+    public User User { get; set; }
 }

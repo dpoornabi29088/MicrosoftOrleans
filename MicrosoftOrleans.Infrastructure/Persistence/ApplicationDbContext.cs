@@ -13,8 +13,8 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<User> User { get; set; }
-    public DbSet<Address> Address { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Address> Addresses { get; set; }
     public DatabaseFacade GetDatabase()
     {
         return Database;

@@ -3,10 +3,10 @@
 namespace MicrosoftOrleans.Domain.Entities;
 
 [GenerateSerializer]
-public sealed class User
+public class User
 {
     [Id(0)]
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     [Id(1)]
     public required string UserName { get; set; }

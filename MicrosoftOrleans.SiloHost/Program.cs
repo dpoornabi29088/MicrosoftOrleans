@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MicrosoftOrleans.Infrastructure;
-using MicrosoftOrleans.Infrastructure.Persistence.Configurations;
 using Orleans.Configuration;
 using Serilog;
+using System.Text.Json.Serialization;
 
 namespace SiloHost;
 
@@ -43,13 +44,12 @@ class Program
                                 });
 
 
-                                var config = new ConfigurationBuilder()
+                                var configuration = new ConfigurationBuilder()
                                                 .SetBasePath(Directory.GetCurrentDirectory())
                                                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                                                 .Build();
 
-                                string connectionString = config.GetSection("DatabaseSettings:OrleansDB").Value;
-
+                                string? connectionString = configuration.GetConnectionString("OrleansDB");
 
                                 builder.UseLocalhostClustering();
 
@@ -67,10 +67,12 @@ class Program
 
                                 builder.ConfigureServices(services =>
                                 {
-                                    services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));
-
+                                    // Set JSON serializer options to ignore cycles
+                                    services.Configure<JsonOptions>(options =>
+                                    {
+                                        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                                    });
                                     services.AddInfrastructureServices();
-
                                 });
 
                                 builder.AddAdoNetGrainStorage("DefaultStorage", options =>

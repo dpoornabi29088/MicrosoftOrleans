@@ -16,7 +16,7 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetUserAsync(int userId)
     {
-        return await _context.Set<User>().Include(u => u.Addresses).FirstOrDefaultAsync(u => u.Id == userId);
+        return await _context.Users.Include(u => u.Addresses).FirstOrDefaultAsync(u => u.Id == userId);
     }
 
     public async Task AddUserAsync(User user)
