@@ -4,8 +4,11 @@ namespace MicrosoftOrleans.Domain.Interfaces;
 
 public interface IUserRepository
 {
-    Task<User?> GetUserAsync(int userId);
-    Task AddUserAsync(User user);
-    Task UpdateUserAsync(User user);
-    Task DeleteUserAsync(int userId);
+    Task<List<User>> ToListAsync();
+    Task<User?> FindAsync(int userId);
+    Task<User?> SingleAsync(int userId);
+    Task AddAsync(User user);
+    Task Update(User user);
+    Task Remove(int userId);
+    Task SaveChangesAsync();
 }

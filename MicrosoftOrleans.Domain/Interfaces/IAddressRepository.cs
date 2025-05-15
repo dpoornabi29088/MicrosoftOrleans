@@ -4,8 +4,9 @@ namespace MicrosoftOrleans.Domain.Interfaces;
 
 public interface IAddressRepository
 {
-    Task<Address> GetAddressAsync(int addressId);
-    Task AddAddressAsync(Address address);
-    Task UpdateAddressAsync(Address address);
-    Task DeleteAddressAsync(int addressId);
+    Task<Address> FindAsync(int addressId);
+    Task AddAsync(Address address);
+    Task Update(Address address);
+    Task Remove(int addressId);
+    Task SaveChangesAsync();
 }

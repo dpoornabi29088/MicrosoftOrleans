@@ -10,9 +10,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
-
-        //builder.HasMany(x => x.Addresses)
-        //   .WithOne(x => x.User)
-        //   .OnDelete(DeleteBehavior.NoAction);
     }
 }

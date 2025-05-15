@@ -14,30 +14,41 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<User?> GetUserAsync(int userId)
+    public async Task<List<User>> ToListAsync()
     {
-        return await _context.Users.Include(u => u.Addresses).FirstOrDefaultAsync(u => u.Id == userId);
+        return await _context.Users
+            .Include(u => u.Addresses)
+            .ToListAsync();
+
     }
 
-    public async Task AddUserAsync(User user)
+    public async Task<User?> FindAsync(int userId) => await _context.Users.FindAsync(userId);
+
+    public async Task<User?> SingleAsync(int userId)
     {
-        await _context.Set<User>().AddAsync(user);
-        await _context.SaveChangesAsync();
+        return await _context.Users
+            .Include(u => u.Addresses)
+            .SingleAsync(u => u.Id == userId);
     }
 
-    public async Task UpdateUserAsync(User user)
+    public async Task AddAsync(User user)
     {
-        _context.Set<User>().Update(user);
-        await _context.SaveChangesAsync();
+        await _context.Users.AddAsync(user);
     }
 
-    public async Task DeleteUserAsync(int userId)
+    public async Task Update(User user)
     {
-        var user = await GetUserAsync(userId);
+        _context.Users.Update(user);
+    }
+
+    public async Task Remove(int userId)
+    {
+        var user = await SingleAsync(userId);
         if (user != null)
         {
-            _context.Set<User>().Remove(user);
-            await _context.SaveChangesAsync();
+            _context.Users.Remove(user);
         }
     }
+
+    public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
 }

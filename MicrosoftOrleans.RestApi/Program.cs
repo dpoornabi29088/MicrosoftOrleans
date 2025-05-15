@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using MicrosoftOrleans.Application.DTOs;
 using MicrosoftOrleans.Application.Interfaces;
 using Orleans.Configuration;
 using Serilog;
@@ -73,10 +74,22 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.MapGet("/AddUser", async ([FromServices] IGrainFactory grainFactory, int userId) =>
+app.MapGet("/GetUser", async ([FromServices] IGrainFactory grainFactory, int userId) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(userId);
     return await userGrain.GetUserAsync();
+});
+
+app.MapPost("/AddUser", async ([FromServices] IGrainFactory grainFactory, [FromBody] CreateUserDto userDto) =>
+{
+    var userGrain = grainFactory.GetGrain<IUserGrain>(1);
+    await userGrain.AddUserAsync(userDto);
+});
+
+app.MapPost("/UpdateUsername", async ([FromServices] IGrainFactory grainFactory, int userId, string userName) =>
+{
+    var userGrain = grainFactory.GetGrain<IUserGrain>(userId);
+    await userGrain.UpdateUsernameAsync(userName);
 });
 
 app.Run();

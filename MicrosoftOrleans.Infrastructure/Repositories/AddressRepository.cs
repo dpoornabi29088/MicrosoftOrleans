@@ -13,30 +13,20 @@ public class AddressRepository : IAddressRepository
         _context = context;
     }
 
-    public async Task<Address> GetAddressAsync(int addressId)
-    {
-        return await _context.Set<Address>().FindAsync(addressId);
-    }
+    public async Task<Address?> FindAsync(int addressId) => await _context.Addresses.FindAsync(addressId);
 
-    public async Task AddAddressAsync(Address address)
-    {
-        await _context.Set<Address>().AddAsync(address);
-        await _context.SaveChangesAsync();
-    }
+    public async Task AddAsync(Address address) => await _context.Addresses.AddAsync(address);
 
-    public async Task UpdateAddressAsync(Address address)
-    {
-        _context.Set<Address>().Update(address);
-        await _context.SaveChangesAsync();
-    }
+    public async Task Update(Address address) => _context.Addresses.Update(address);
 
-    public async Task DeleteAddressAsync(int addressId)
+    public async Task Remove(int addressId)
     {
-        var address = await GetAddressAsync(addressId);
-        if (address != null)
+        var address = await FindAsync(addressId);
+
+        if (address is not null)
         {
-            _context.Set<Address>().Remove(address);
-            await _context.SaveChangesAsync();
+            _context.Addresses.Remove(address);
         }
     }
+    public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
 }
