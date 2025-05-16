@@ -37,6 +37,13 @@ class Program
                             .UseSerilog()
                             .UseOrleans(builder =>
                             {
+                                builder.UseDashboard(options =>
+                                {
+                                    options.Host = "*"; // Allow access from any host
+                                    options.Port = 8080; // Default dashboard port
+                                });
+
+
                                 builder.ConfigureLogging(logging =>
                                 {
                                     logging.AddConsole();

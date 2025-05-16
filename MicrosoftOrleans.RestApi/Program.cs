@@ -98,4 +98,16 @@ app.MapPost("/ChangeUserName", async ([FromServices] IGrainFactory grainFactory,
     await userGrain.ChangeUserNameAsync(newUserName);
 });
 
+app.MapPost("/DeleteUser", async ([FromServices] IGrainFactory grainFactory, string userName) =>
+{
+    var userGrain = grainFactory.GetGrain<IUserGrain>(userName);
+    await userGrain.DeleteUserAsync();
+});
+
+app.MapPost("/AddAddress", async ([FromServices] IGrainFactory grainFactory, [FromBody] CreateAddressDto createAddressDto) =>
+{
+    var userGrain = grainFactory.GetGrain<IUserGrain>(createAddressDto.UserName);
+    await userGrain.AddAddressAsync(createAddressDto);
+});
+
 app.Run();

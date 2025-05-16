@@ -12,7 +12,7 @@ namespace MicrosoftOrleans.Application.Common.Interfaces
         Task ChangeUserNameAsync(string newUserName);
         Task DeleteUserAsync();
         //Task<List<Address>> GetAddressesAsync();
-        //Task AddAddressAsync(Address address);
+        Task AddAddressAsync(CreateAddressDto addressDto);
         //Task UpdateAddressAsync(Address address);
         //Task DeleteAddressAsync(int addressId);
     }

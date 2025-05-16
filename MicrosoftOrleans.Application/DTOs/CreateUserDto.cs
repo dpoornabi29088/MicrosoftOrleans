@@ -3,11 +3,4 @@
 namespace MicrosoftOrleans.Application.DTOs;
 
 [GenerateSerializer]
-public class CreateUserDto
-{
-    [Id(0)]
-    public required string UserName { get; set; }
-
-    [Id(1)]
-    public required string Password { get; set; }
-}
+public record CreateUserDto(string UserName, string Password);
