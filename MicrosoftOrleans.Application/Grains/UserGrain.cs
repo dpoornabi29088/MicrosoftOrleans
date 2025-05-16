@@ -1,5 +1,5 @@
-﻿using MicrosoftOrleans.Application.DTOs;
-using MicrosoftOrleans.Application.Interfaces;
+﻿using MicrosoftOrleans.Application.Common.Interfaces;
+using MicrosoftOrleans.Application.DTOs;
 using MicrosoftOrleans.Domain.Entities;
 using MicrosoftOrleans.Domain.Interfaces;
 using Orleans;
@@ -14,14 +14,17 @@ namespace MicrosoftOrleans.Infrastructure.Grains
         private readonly IUserRepository _userRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IPersistentState<List<User>> _userStates;
+        private readonly IEncryptionService _encryptionService;
 
         public UserGrain([PersistentState("user", "DefaultStorage")] IPersistentState<List<User>> userStates,
             IUserRepository userRepository,
-            IAddressRepository addressRepository)
+            IAddressRepository addressRepository,
+            IEncryptionService encryptionService)
         {
             _userRepository = userRepository;
             _addressRepository = addressRepository;
             _userStates = userStates;
+            _encryptionService = encryptionService;
         }
 
         public async override Task OnActivateAsync(CancellationToken cancellationToken)
@@ -34,14 +37,39 @@ namespace MicrosoftOrleans.Infrastructure.Grains
             }
         }
 
-        public async Task<User?> GetUserAsync() => await _userRepository.SingleAsync((int)this.GetPrimaryKeyLong());
-
-        public async Task AddUserAsync(CreateUserDto user)
+        public async Task<User?> GetUserAsync()
         {
-            if (_userStates.State.Any(x => string.Compare(x.UserName, user.UserName, true) == 0))
+            var user = await _userRepository.FindByUserNameAsync(this.GetPrimaryKeyString());
+
+            if (user is null)
+                throw new Exception("The user not found");
+
+            return user;
+        }
+
+        public async Task<bool> LoginAsync(LoginDto loginDto)
+        {
+            var user = await _userRepository.FindByUserNameAsync(loginDto.UserName);
+
+            if (user is null)
+                throw new Exception("The user not found!");
+
+            var decryptedPassword = _encryptionService.Decrypt(user.Password, user.IV);
+
+            if (decryptedPassword != loginDto.Password)
+                throw new Exception("The username or password is incorrect!");
+
+            return true;
+        }
+
+        public async Task AddUserAsync(CreateUserDto userDto)
+        {
+            if (_userStates.State.Any(x => string.Compare(x.UserName, userDto.UserName, true) == 0))
             {
                 throw new Exception("Duplicate user!");
             }
+            var user = User.Create(userDto.UserName, userDto.Password, _encryptionService);
+
             await _userRepository.AddAsync(user);
 
             await _userRepository.SaveChangesAsync();
@@ -53,15 +81,16 @@ namespace MicrosoftOrleans.Infrastructure.Grains
             await WriteStateAsync();
         }
 
-        public async Task UpdateUsernameAsync(string userName)
+        public async Task ChangeUserNameAsync(string newUserName)
         {
-            var user = await _userRepository.FindAsync((int)this.GetPrimaryKeyLong());
+            var user = await _userRepository.FindByUserNameAsync(this.GetPrimaryKeyString());
 
             if (user is null)
             {
                 throw new Exception("User not found!");
             }
-            user.UserName = userName;
+
+            user.SetUserName(newUserName);
 
             await _userRepository.SaveChangesAsync();
 
@@ -72,13 +101,16 @@ namespace MicrosoftOrleans.Infrastructure.Grains
 
         public async Task DeleteUserAsync()
         {
-            int id = (int)this.GetPrimaryKeyLong();
+            var user = await _userRepository.FindByUserNameAsync(this.GetPrimaryKeyString());
 
-            await _userRepository.Remove(id);
+            if (user is null)
+                return;
+
+            _userRepository.Remove(user);
 
             await _userRepository.SaveChangesAsync();
 
-            var index = _userStates.State.FindIndex(x => x.Id == id);
+            var index = _userStates.State.FindIndex(x => x.Id == user.Id);
 
             if (index != -1)
                 _userStates.State.RemoveAt(index);

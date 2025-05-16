@@ -3,7 +3,7 @@
 namespace MicrosoftOrleans.Application.DTOs;
 
 [GenerateSerializer]
-public class CreateUserDto
+public class LoginDto
 {
     [Id(0)]
     public required string UserName { get; set; }

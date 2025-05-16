@@ -24,6 +24,9 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> FindAsync(int userId) => await _context.Users.FindAsync(userId);
 
+    public async Task<User?> FindByUserNameAsync(string userName) =>
+        await _context.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+
     public async Task<User?> SingleAsync(int userId)
     {
         return await _context.Users
@@ -48,6 +51,11 @@ public class UserRepository : IUserRepository
         {
             _context.Users.Remove(user);
         }
+    }
+
+    public void Remove(User user)
+    {
+        _context.Users.Remove(user);
     }
 
     public async Task SaveChangesAsync() => await _context.SaveChangesAsync();

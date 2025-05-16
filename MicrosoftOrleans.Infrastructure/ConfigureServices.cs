@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MicrosoftOrleans.Domain.Interfaces;
 using MicrosoftOrleans.Infrastructure.Persistence;
 using MicrosoftOrleans.Infrastructure.Repositories;
+using MicrosoftOrleans.Infrastructure.Services.Security;
 
 namespace MicrosoftOrleans.Infrastructure;
 
@@ -15,6 +16,8 @@ public static class ConfigureServices
                                                 .SetBasePath(Directory.GetCurrentDirectory())
                                                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                                                 .Build();
+
+        services.AddSingleton<IEncryptionService, EncryptionService>();
 
         services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
         {

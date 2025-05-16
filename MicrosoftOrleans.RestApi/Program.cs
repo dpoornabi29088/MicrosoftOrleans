@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using MicrosoftOrleans.Application.Common.Interfaces;
 using MicrosoftOrleans.Application.DTOs;
-using MicrosoftOrleans.Application.Interfaces;
 using Orleans.Configuration;
 using Serilog;
 using System.Text.Json.Serialization;
@@ -74,22 +74,28 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.MapGet("/GetUser", async ([FromServices] IGrainFactory grainFactory, int userId) =>
+app.MapPost("/Login", async ([FromServices] IGrainFactory grainFactory, [FromBody] LoginDto loginDto) =>
 {
-    var userGrain = grainFactory.GetGrain<IUserGrain>(userId);
+    var userGrain = grainFactory.GetGrain<IUserGrain>(loginDto.UserName);
+    return await userGrain.LoginAsync(loginDto);
+});
+
+app.MapGet("/GetUser", async ([FromServices] IGrainFactory grainFactory, string userName) =>
+{
+    var userGrain = grainFactory.GetGrain<IUserGrain>(userName);
     return await userGrain.GetUserAsync();
 });
 
 app.MapPost("/AddUser", async ([FromServices] IGrainFactory grainFactory, [FromBody] CreateUserDto userDto) =>
 {
-    var userGrain = grainFactory.GetGrain<IUserGrain>(1);
+    var userGrain = grainFactory.GetGrain<IUserGrain>(userDto.UserName);
     await userGrain.AddUserAsync(userDto);
 });
 
-app.MapPost("/UpdateUsername", async ([FromServices] IGrainFactory grainFactory, int userId, string userName) =>
+app.MapPost("/ChangeUserName", async ([FromServices] IGrainFactory grainFactory, string oldUserName, string newUserName) =>
 {
-    var userGrain = grainFactory.GetGrain<IUserGrain>(userId);
-    await userGrain.UpdateUsernameAsync(userName);
+    var userGrain = grainFactory.GetGrain<IUserGrain>(oldUserName);
+    await userGrain.ChangeUserNameAsync(newUserName);
 });
 
 app.Run();
