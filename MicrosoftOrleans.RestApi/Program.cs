@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using MicrosoftOrleans.Application.Common.Interfaces;
 using MicrosoftOrleans.Application.DTOs;
+using MicrosoftOrleans.RestApi.Middlewares;
 using Orleans.Configuration;
 using Serilog;
 using System.Text.Json.Serialization;
@@ -63,6 +64,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

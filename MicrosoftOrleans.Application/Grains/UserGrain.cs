@@ -31,7 +31,23 @@ public class UserGrain : Grain<User>, IUserGrain
     {
         await base.OnActivateAsync(cancellationToken);
 
-        _userState.State = await _userRepository.FindByUserNameAsync(this.GetPrimaryKeyString());
+        var user = await _userRepository.FindByUserNameAsync(this.GetPrimaryKeyString());
+
+        if (user == null)
+        {
+            try
+            {
+                DeactivateOnIdle();
+                return;
+            }
+            catch (Exception)
+            {
+
+            }
+
+        }
+
+        _userState.State = user;
     }
 
     public async Task<User?> GetUserAsync()
