@@ -7,9 +7,9 @@ namespace MicrosoftOrleans.Infrastructure.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ProductionDbContext _context;
 
-    public UserRepository(ApplicationDbContext context)
+    public UserRepository(ProductionDbContext context)
     {
         _context = context;
     }

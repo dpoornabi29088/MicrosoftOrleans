@@ -9,11 +9,11 @@ namespace MicrosoftOrleans.Application.Common.Interfaces
         Task<bool> LoginAsync(LoginDto loginDto);
         Task<User?> GetUserAsync();
         Task AddUserAsync(CreateUserDto user);
-        Task ChangeUserNameAsync(string newUserName);
-        Task DeleteUserAsync();
-        //Task<List<Address>> GetAddressesAsync();
+        Task UpdateUserNameAsync(string newUserName);
+        Task DeleteCurrentUserAsync();
+        Task<List<Address>> GetAddressesAsync();
         Task AddAddressAsync(CreateAddressDto addressDto);
-        //Task UpdateAddressAsync(Address address);
-        //Task DeleteAddressAsync(int addressId);
+        Task UpdateAddressAsync(UpdateAddressDto updateCityDto);
+        Task DeleteAddressAsync(DeleteAddressDto deleteAddressDto);
     }
 }

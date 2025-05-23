@@ -6,9 +6,9 @@ namespace MicrosoftOrleans.Infrastructure.Repositories;
 
 public class AddressRepository : IAddressRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ProductionDbContext _context;
 
-    public AddressRepository(ApplicationDbContext context)
+    public AddressRepository(ProductionDbContext context)
     {
         _context = context;
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MicrosoftOrleans.Application.Common.Interfaces;
 using MicrosoftOrleans.Domain.Interfaces;
 using MicrosoftOrleans.Infrastructure.Persistence;
 using MicrosoftOrleans.Infrastructure.Repositories;
@@ -19,7 +20,7 @@ public static class ConfigureServices
 
         services.AddSingleton<IEncryptionService, EncryptionService>();
 
-        services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
+        services.AddDbContext<IProductionDbContext, ProductionDbContext>((serviceProvider, options) =>
         {
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             options.UseSqlServer(configuration.GetConnectionString("ProductionDB"), sqlserverOptions =>
@@ -29,11 +30,23 @@ public static class ConfigureServices
                     maxRetryCount: 5, // Number of retry attempts
                     maxRetryDelay: TimeSpan.FromSeconds(10), // Maximum delay between retries
                     errorNumbersToAdd: null
-                ); // Additional error numbers to be considered transient
+                );
             });
         }, ServiceLifetime.Scoped);
 
-        //services.AddScoped<ApplicationDbContext>();
+        services.AddDbContext<IOrleansDbContext, OrleansDbContext>((serviceProvider, options) =>
+        {
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            options.UseSqlServer(configuration.GetConnectionString("OrleansDB"), sqlserverOptions =>
+            {
+                sqlserverOptions.CommandTimeout(360); // 3 minutes
+                sqlserverOptions.EnableRetryOnFailure(
+                    maxRetryCount: 5, // Number of retry attempts
+                    maxRetryDelay: TimeSpan.FromSeconds(10), // Maximum delay between retries
+                    errorNumbersToAdd: null
+                );
+            });
+        }, ServiceLifetime.Scoped);
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();

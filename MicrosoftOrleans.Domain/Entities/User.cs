@@ -1,5 +1,7 @@
 ﻿using MicrosoftOrleans.Domain.Interfaces;
+using MicrosoftOrleans.Domain.Shared;
 using Orleans;
+using System.Text.Json.Serialization;
 
 namespace MicrosoftOrleans.Domain.Entities;
 
@@ -14,9 +16,11 @@ public class User
     public string UserName { get; private set; }
 
     [Id(2)]
+    [JsonConverter(typeof(Base64ByteArrayConverter))]
     public byte[] Password { get; private set; }
 
     [Id(3)]
+    [JsonConverter(typeof(Base64ByteArrayConverter))]
     public byte[] IV { get; private set; }
 
     [Id(4)]
@@ -49,4 +53,7 @@ public class User
 
         UserName = userName;
     }
+
+    public Address? FindAddress(string city, string street, string alley, int plaque)
+        => Addresses.FirstOrDefault(x => x.City == city && x.Street == street && x.Alley == alley && x.Plaque == plaque);
 }

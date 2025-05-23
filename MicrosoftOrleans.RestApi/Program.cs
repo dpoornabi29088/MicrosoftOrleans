@@ -95,22 +95,40 @@ app.MapPost("/AddUser", async ([FromServices] IGrainFactory grainFactory, [FromB
     await userGrain.AddUserAsync(userDto);
 });
 
-app.MapPost("/ChangeUserName", async ([FromServices] IGrainFactory grainFactory, string oldUserName, string newUserName) =>
+app.MapPost("/UpdateUserName", async ([FromServices] IGrainFactory grainFactory, string oldUserName, string newUserName) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(oldUserName);
-    await userGrain.ChangeUserNameAsync(newUserName);
+    await userGrain.UpdateUserNameAsync(newUserName);
 });
 
 app.MapPost("/DeleteUser", async ([FromServices] IGrainFactory grainFactory, string userName) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(userName);
-    await userGrain.DeleteUserAsync();
+    await userGrain.DeleteCurrentUserAsync();
+});
+
+app.MapPost("/GetAddresses", async ([FromServices] IGrainFactory grainFactory, string userName) =>
+{
+    var userGrain = grainFactory.GetGrain<IUserGrain>(userName);
+    return await userGrain.GetAddressesAsync();
 });
 
 app.MapPost("/AddAddress", async ([FromServices] IGrainFactory grainFactory, [FromBody] CreateAddressDto createAddressDto) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(createAddressDto.UserName);
     await userGrain.AddAddressAsync(createAddressDto);
+});
+
+app.MapPost("/UpdateAddress", async ([FromServices] IGrainFactory grainFactory, [FromBody] UpdateAddressDto updateAddressDto) =>
+{
+    var userGrain = grainFactory.GetGrain<IUserGrain>(updateAddressDto.UserName);
+    await userGrain.UpdateAddressAsync(updateAddressDto);
+});
+
+app.MapPost("/DeleteAddress", async ([FromServices] IGrainFactory grainFactory, [FromBody] DeleteAddressDto deleteAddressDto) =>
+{
+    var userGrain = grainFactory.GetGrain<IUserGrain>(deleteAddressDto.UserName);
+    await userGrain.DeleteAddressAsync(deleteAddressDto);
 });
 
 app.Run();

@@ -2,19 +2,23 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
+using MicrosoftOrleans.Application.Common.Interfaces;
 using MicrosoftOrleans.Domain.Entities;
 using System.Reflection;
 
 namespace MicrosoftOrleans.Infrastructure.Persistence;
 
-public class ApplicationDbContext : DbContext
+public class ProductionDbContext : DbContext, IProductionDbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    private const string ConnectionName = "ProductionDB";
+    public ProductionDbContext(DbContextOptions<ProductionDbContext> options)
     {
     }
 
     public DbSet<User> Users { get; set; }
+
     public DbSet<Address> Addresses { get; set; }
+
     public DatabaseFacade GetDatabase()
     {
         return Database;
@@ -24,13 +28,6 @@ public class ApplicationDbContext : DbContext
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        //Set sequence
-        builder.HasSequence<long>("ExectingProcessSequences")
-            .StartsAt(1)
-        .IncrementsBy(1);
-
-        //builder.Ignore<ExecutingProcessVm>();
-
         base.OnModelCreating(builder);
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -38,28 +35,30 @@ public class ApplicationDbContext : DbContext
         SetDataProvider(optionsBuilder);
     }
 
-    public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+    public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ProductionDbContext>
     {
         public ApplicationDbContextFactory()
         {
         }
-        public ApplicationDbContext CreateDbContext(string[] args)
+        public ProductionDbContext CreateDbContext(string[] args)
         {
-            return new(SetDataProvider(new DbContextOptionsBuilder<ApplicationDbContext>()).Options);
+            return new(SetDataProvider(new DbContextOptionsBuilder<ProductionDbContext>()).Options);
         }
     }
 
     private static void SetDataProvider(DbContextOptionsBuilder optionsBuilder)
     {
         IConfiguration _configuration = GetConfiguration();
-        optionsBuilder.UseSqlServer(_configuration.GetConnectionString("ProductionDB"));
+        optionsBuilder.UseSqlServer(_configuration.GetConnectionString(ConnectionName));
     }
-    private static DbContextOptionsBuilder<ApplicationDbContext> SetDataProvider(DbContextOptionsBuilder<ApplicationDbContext> optionsBuilder)
+
+    private static DbContextOptionsBuilder<ProductionDbContext> SetDataProvider(DbContextOptionsBuilder<ProductionDbContext> optionsBuilder)
     {
         IConfiguration _configuration = GetConfiguration();
-        optionsBuilder.UseSqlServer(_configuration.GetConnectionString("ProductionDB"));
+        optionsBuilder.UseSqlServer(_configuration.GetConnectionString(ConnectionName));
         return optionsBuilder;
     }
+
     private static IConfiguration GetConfiguration()
     {
         IConfiguration _configuration = new ConfigurationBuilder()
