@@ -5,7 +5,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MicrosoftOrleans.Infrastructure;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Orleans.Configuration;
 using Orleans.Serialization;
 using Serilog;
@@ -61,20 +60,6 @@ class Program
 
                                 });
 
-                                builder.Services.AddOptions<NewtonsoftJsonCodecOptions>()
-                                                .Configure<IServiceProvider>((options, serviceProvider) =>
-                                                {
-                                                    options.SerializerSettings = new JsonSerializerSettings
-                                                    {
-                                                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                                                        NullValueHandling = NullValueHandling.Ignore,
-                                                        ContractResolver = new DefaultContractResolver
-                                                        {
-                                                            NamingStrategy = new CamelCaseNamingStrategy()
-                                                        }
-                                                        // Add other customizations as needed
-                                                    };
-                                                });
 
                                 var configuration = new ConfigurationBuilder()
                                                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -111,6 +96,18 @@ class Program
                                 {
                                     options.Invariant = "Microsoft.Data.SqlClient";
                                     options.ConnectionString = connectionString;
+                                });
+
+
+                                // If using Newtonsoft.Json (legacy):
+                                builder.Services.Configure<NewtonsoftJsonCodecOptions>(options =>
+                                {
+                                    options.SerializerSettings = new JsonSerializerSettings
+                                    {
+                                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                                        NullValueHandling = NullValueHandling.Include,
+                                        TypeNameHandling = TypeNameHandling.Auto
+                                    };
                                 });
 
                             });
