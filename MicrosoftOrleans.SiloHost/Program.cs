@@ -4,7 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MicrosoftOrleans.Infrastructure;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Orleans.Configuration;
+using Orleans.Serialization;
 using Serilog;
 using System.Text.Json.Serialization;
 
@@ -50,6 +53,28 @@ class Program
                                     logging.SetMinimumLevel(LogLevel.Debug); // Capture detailed logs
                                 });
 
+                                builder.Services.AddSerializer(serializerBuilder =>
+                                {
+                                    // Option 1: Basic configuration (just type filtering)
+                                    serializerBuilder.AddNewtonsoftJsonSerializer(isSupported: type => type.Namespace?
+                                                                                                        .StartsWith("MicrosoftOrleans") ?? false);
+
+                                });
+
+                                builder.Services.AddOptions<NewtonsoftJsonCodecOptions>()
+                                                .Configure<IServiceProvider>((options, serviceProvider) =>
+                                                {
+                                                    options.SerializerSettings = new JsonSerializerSettings
+                                                    {
+                                                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                                                        NullValueHandling = NullValueHandling.Ignore,
+                                                        ContractResolver = new DefaultContractResolver
+                                                        {
+                                                            NamingStrategy = new CamelCaseNamingStrategy()
+                                                        }
+                                                        // Add other customizations as needed
+                                                    };
+                                                });
 
                                 var configuration = new ConfigurationBuilder()
                                                 .SetBasePath(Directory.GetCurrentDirectory())
