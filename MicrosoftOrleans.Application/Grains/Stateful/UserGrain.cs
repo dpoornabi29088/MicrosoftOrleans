@@ -1,109 +1,44 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MicrosoftOrleans.Application.Common.Interfaces;
+﻿using MicrosoftOrleans.Application.Common.Interfaces;
 using MicrosoftOrleans.Application.DTOs;
 using MicrosoftOrleans.Domain.Entities;
 using MicrosoftOrleans.Domain.Interfaces;
 using Orleans;
 using Orleans.Providers;
-using Orleans.Runtime;
-using System.Text;
-using System.Text.Json;
+using Serilog;
 
 namespace MicrosoftOrleans.Application.Grains.Stateful;
 
 [StorageProvider(ProviderName = "DefaultStorage")]
 public class UserGrain : Grain<User>, IUserGrain
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IAddressRepository _addressRepository;
-    private readonly IPersistentState<User> _userState;
     private readonly IEncryptionService _encryptionService;
-    private readonly IOrleansDbContext _orleansDbContext;
-
-    public UserGrain([PersistentState("user", "DefaultStorage")] IPersistentState<User> userState,
-        IUserRepository userRepository,
-        IAddressRepository addressRepository,
-        IEncryptionService encryptionService,
-        IOrleansDbContext orleansDbContext)
+    //private readonly IPersistentState<User> _userState;
+    public UserGrain(IEncryptionService encryptionService//,
+                                                         //[PersistentState("user", "DefaultStorage")] IPersistentState<User> userState
+        )
     {
-        _userRepository = userRepository;
-        _addressRepository = addressRepository;
-        _userState = userState;
         _encryptionService = encryptionService;
-        _orleansDbContext = orleansDbContext;
+        //_userState = userState;
     }
 
-    public async override Task OnActivateAsync(CancellationToken cancellationToken)
+    public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
-        await base.OnActivateAsync(cancellationToken);
-
-        //var user = await _userRepository.FindByUserNameAsync(this.GetPrimaryKeyString());
-
-        //if (user == null)
-        //    return;
-
-        //_userState.State = user;
-        var user = await GetLatestStateAsync(this.GetPrimaryKeyString());
-
-        if (user is not null)
-            _userState.State = user;
-
-    }
-
-    public async Task<User?> GetLatestStateAsync(string grainIdExtension)
-    {
-        var entity = await _orleansDbContext.OrleansStorages
-            .Where(e => e.GrainIdExtensionString == grainIdExtension)
-            .OrderByDescending(e => e.ModifiedOn)
-            .FirstOrDefaultAsync();
-
-        if (entity != null && entity.PayloadBinary != null)
+        await ReadStateAsync();
+        if (State == null)
         {
-            var json = (Encoding.UTF8.GetString(entity.PayloadBinary))
-           .Replace("\"Type\"", "\"IgnoreType\"") // Removes type metadata
-    .Replace("\"$values\"", "\"Values\""); // Corrects empty collections
-
-
-
-
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var user = System.Text.Json.JsonSerializer.Deserialize<User>(json, options);
-
-
-            //var user = JsonConvert.DeserializeObject<User>(json);
-            return user;
+            Log.Information("No existing state found for user {UserId}", this.GetPrimaryKey());
+            State = new User();
         }
-
-        return null;
     }
-
-
 
     public async Task<User?> GetUserAsync()
     {
-        //var user = await _userRepository.FindByUserNameAsync(this.GetPrimaryKeyString());
-
-        //if (user is null)
-        //    throw new Exception("The user not found");
-
-        //return user;
-
-        return await Task.FromResult(_userState.State);
+        return await Task.FromResult(State);
     }
 
     public async Task<bool> LoginAsync(LoginDto loginDto)
     {
-        //var user = await _userRepository.FindByUserNameAsync(this.GetPrimaryKeyString());
-
-        //if (user is null)
-        //    throw new Exception("The user not found!");
-
-        //var decryptedPassword = _encryptionService.Decrypt(user.Password, user.IV);
-        var decryptedPassword = _encryptionService.Decrypt(_userState.State.Password, _userState.State.IV);
+        var decryptedPassword = _encryptionService.Decrypt(State.Password, State.IV);
         if (decryptedPassword != loginDto.Password)
             throw new Exception("The username or password is incorrect!");
 
@@ -114,12 +49,6 @@ public class UserGrain : Grain<User>, IUserGrain
     {
         var user = User.Create(userDto.UserName, userDto.Password, _encryptionService);
 
-        //await _userRepository.AddAsync(user);
-
-        //await _userRepository.SaveChangesAsync();
-
-        _userState.State = user;
-
         State = user;
 
         await WriteStateAsync();
@@ -127,36 +56,14 @@ public class UserGrain : Grain<User>, IUserGrain
 
     public async Task UpdateUserNameAsync(string newUserName)
     {
-        // var user = await _userRepository.FindByUserNameAsync(this.GetPrimaryKeyString());
-
-        //if (user is null)
-        //{
-        //    throw new Exception("User not found!");
-        //}
-
-        //user.SetUserName(newUserName);
-
-        // await _userRepository.SaveChangesAsync();
-
-        //_userState.State = user;
-
-        _userState.State.SetUserName(newUserName);
+        State.SetUserName(newUserName);
 
         await WriteStateAsync();
     }
 
     public async Task DeleteCurrentUserAsync()
     {
-        //var user = await _userRepository.FindByUserNameAsync(this.GetPrimaryKeyString());
-
-        //if (user is null)
-        //    return;
-
-        //_userRepository.Remove(user);
-
-        //await _userRepository.SaveChangesAsync();
-
-        await _userState.ClearStateAsync();
+        await ClearStateAsync();
 
         await WriteStateAsync();
 
@@ -165,47 +72,24 @@ public class UserGrain : Grain<User>, IUserGrain
 
     public async Task AddAddressAsync(CreateAddressDto addressDto)
     {
-        //var user = await _userRepository.FindByUserNameAsync(this.GetPrimaryKeyString());
+        var address = Address.Create(State.Id, addressDto.City, addressDto.Street, addressDto.Alley, addressDto.Plaque);
 
-        //var address = Address.Create(user.Id, addressDto.City, addressDto.Street, addressDto.Alley, addressDto.Plaque);
-
-        //if (_userState.State.Addresses.Any(x => x.Equals(address)))
-        //    throw new Exception("Duplicate address!");
-
-        //await _addressRepository.AddAsync(address);
-
-        //await _addressRepository.SaveChangesAsync();
-
-        var address = Address.Create(_userState.State.Id, addressDto.City, addressDto.Street, addressDto.Alley, addressDto.Plaque);
-
-        if (_userState.State.Addresses.Any(x => x.Equals(address)))
+        if (State.Addresses.Any(x => x.Equals(address)))
             throw new Exception("Duplicate address!");
 
-        _userState.State.Addresses.Add(address);
+        State.Addresses.Add(address);
 
         await WriteStateAsync();
     }
 
     public async Task<List<Address>> GetAddressesAsync()
     {
-        return await Task.FromResult(_userState.State.Addresses);
+        return await Task.FromResult(State.Addresses);
     }
-
 
     public async Task UpdateAddressAsync(UpdateAddressDto updateAddressDto)
     {
-        //await _addressRepository.Update(address);
-
-        //var existingAddress = State.Addresses.Find(a => a.Id == address.Id);
-
-        //if (existingAddress != null)
-        //{
-        //    existingAddress.Street = address.Street;
-        //    existingAddress.City = address.City;
-        //}
-
-
-        var address = _userState.State.Addresses.SingleOrDefault(x => x.Id == updateAddressDto.addressId);
+        var address = State.Addresses.SingleOrDefault(x => x.Id == updateAddressDto.addressId);
 
         if (address is null)
             throw new Exception("The address not found!");
@@ -220,8 +104,7 @@ public class UserGrain : Grain<User>, IUserGrain
 
     public async Task DeleteAddressAsync(DeleteAddressDto deleteAddressDto)
     {
-        //await _addressRepository.Remove(addressId);
-        var address = _userState.State.FindAddress(deleteAddressDto.City, deleteAddressDto.Street, deleteAddressDto.Alley, deleteAddressDto.Plaque);
+        var address = State.FindAddress(deleteAddressDto.City, deleteAddressDto.Street, deleteAddressDto.Alley, deleteAddressDto.Plaque);
 
         if (address is null)
             return;

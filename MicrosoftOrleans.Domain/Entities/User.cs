@@ -1,7 +1,5 @@
 ﻿using MicrosoftOrleans.Domain.Interfaces;
-using MicrosoftOrleans.Domain.Shared;
 using Orleans;
-using System.Text.Json.Serialization;
 
 namespace MicrosoftOrleans.Domain.Entities;
 
@@ -16,11 +14,9 @@ public class User
     public string UserName { get; private set; }
 
     [Id(2)]
-    [JsonConverter(typeof(Base64ByteArrayConverter))]
     public byte[] Password { get; private set; }
 
     [Id(3)]
-    [JsonConverter(typeof(Base64ByteArrayConverter))]
     public byte[] IV { get; private set; }
 
     [Id(4)]
