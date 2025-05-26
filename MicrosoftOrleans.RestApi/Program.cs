@@ -41,7 +41,7 @@ using IHost host = new HostBuilder()
 
 await host.StartAsync();
 
-IGrainFactory client = host.Services.GetRequiredService<IGrainFactory>();
+IClusterClient client = host.Services.GetRequiredService<IClusterClient>();
 
 builder.Services.AddSingleton(client);
 builder.Services.AddSerilog();
@@ -77,55 +77,55 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.MapPost("/Login", async ([FromServices] IGrainFactory grainFactory, [FromBody] LoginDto loginDto) =>
+app.MapPost("/Login", async ([FromServices] IClusterClient grainFactory, [FromBody] LoginDto loginDto) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(loginDto.UserName);
     return await userGrain.LoginAsync(loginDto);
 });
 
-app.MapGet("/GetUser", async ([FromServices] IGrainFactory grainFactory, string userName) =>
+app.MapGet("/GetUser", async ([FromServices] IClusterClient grainFactory, string userName) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(userName);
     return await userGrain.GetUserAsync();
 });
 
-app.MapPost("/AddUser", async ([FromServices] IGrainFactory grainFactory, [FromBody] CreateUserDto userDto) =>
+app.MapPost("/AddUser", async ([FromServices] IClusterClient grainFactory, [FromBody] CreateUserDto userDto) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(userDto.UserName);
     await userGrain.AddUserAsync(userDto);
 });
 
-app.MapPost("/UpdateUserName", async ([FromServices] IGrainFactory grainFactory, string oldUserName, string newUserName) =>
+app.MapPost("/UpdateUserName", async ([FromServices] IClusterClient grainFactory, string oldUserName, string newUserName) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(oldUserName);
     await userGrain.UpdateUserNameAsync(newUserName);
 });
 
-app.MapPost("/DeleteUser", async ([FromServices] IGrainFactory grainFactory, string userName) =>
+app.MapPost("/DeleteUser", async ([FromServices] IClusterClient grainFactory, string userName) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(userName);
     await userGrain.DeleteCurrentUserAsync();
 });
 
-app.MapPost("/GetAddresses", async ([FromServices] IGrainFactory grainFactory, string userName) =>
+app.MapPost("/GetAddresses", async ([FromServices] IClusterClient grainFactory, string userName) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(userName);
     return await userGrain.GetAddressesAsync();
 });
 
-app.MapPost("/AddAddress", async ([FromServices] IGrainFactory grainFactory, [FromBody] CreateAddressDto createAddressDto) =>
+app.MapPost("/AddAddress", async ([FromServices] IClusterClient grainFactory, [FromBody] CreateAddressDto createAddressDto) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(createAddressDto.UserName);
     await userGrain.AddAddressAsync(createAddressDto);
 });
 
-app.MapPost("/UpdateAddress", async ([FromServices] IGrainFactory grainFactory, [FromBody] UpdateAddressDto updateAddressDto) =>
+app.MapPost("/UpdateAddress", async ([FromServices] IClusterClient grainFactory, [FromBody] UpdateAddressDto updateAddressDto) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(updateAddressDto.UserName);
     await userGrain.UpdateAddressAsync(updateAddressDto);
 });
 
-app.MapPost("/DeleteAddress", async ([FromServices] IGrainFactory grainFactory, [FromBody] DeleteAddressDto deleteAddressDto) =>
+app.MapPost("/DeleteAddress", async ([FromServices] IClusterClient grainFactory, [FromBody] DeleteAddressDto deleteAddressDto) =>
 {
     var userGrain = grainFactory.GetGrain<IUserGrain>(deleteAddressDto.UserName);
     await userGrain.DeleteAddressAsync(deleteAddressDto);

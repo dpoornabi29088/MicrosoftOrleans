@@ -39,27 +39,14 @@ class Program
                             .UseSerilog()
                             .UseOrleans(builder =>
                             {
-                                builder.UseDashboard(options =>
-                                {
-                                    options.Host = "*"; // Allow access from any host
-                                    options.Port = 8080; // Default dashboard port
-                                });
-
-
+                                
                                 builder.ConfigureLogging(logging =>
                                 {
                                     logging.AddConsole();
                                     logging.SetMinimumLevel(LogLevel.Debug); // Capture detailed logs
                                 });
 
-                                builder.Services.AddSerializer(serializerBuilder =>
-                                {
-                                    // Option 1: Basic configuration (just type filtering)
-                                    serializerBuilder.AddNewtonsoftJsonSerializer(isSupported: type => type.Namespace?
-                                                                                                        .StartsWith("MicrosoftOrleans") ?? false);
-
-                                });
-
+                                
 
                                 var configuration = new ConfigurationBuilder()
                                                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -68,18 +55,31 @@ class Program
 
                                 string? connectionString = configuration.GetConnectionString("OrleansDB");
 
-                                builder.UseLocalhostClustering();
-
-                                builder.UseAdoNetClustering(options =>
+                                builder.UseLocalhostClustering()
+                                .UseDashboard(options =>
+                                {
+                                    options.Host = "*"; // Allow access from any host
+                                    options.Port = 8080; // Default dashboard port
+                                })
+                                .UseAdoNetClustering(options =>
                                 {
                                     options.Invariant = "Microsoft.Data.SqlClient";
                                     options.ConnectionString = connectionString;
-                                });
-
-                                builder.Configure<ClusterOptions>(options =>
+                                })
+                                .Configure<ClusterOptions>(options =>
                                 {
                                     options.ClusterId = "us3";
                                     options.ServiceId = "myawesomeservice";
+                                })
+                                //.AddAdoNetGrainStorageAsDefault(options =>
+                                //{
+                                //    options.Invariant = "Microsoft.Data.SqlClient";
+                                //    options.ConnectionString = connectionString;
+                                //})
+                                .AddAdoNetGrainStorage("DefaultStorage", options =>
+                                {
+                                    options.Invariant = "Microsoft.Data.SqlClient";
+                                    options.ConnectionString = connectionString;
                                 });
 
                                 builder.ConfigureServices(services =>
@@ -91,25 +91,7 @@ class Program
                                     });
                                     services.AddInfrastructureServices();
                                 });
-
-                                builder.AddAdoNetGrainStorage("DefaultStorage", options =>
-                                {
-                                    options.Invariant = "Microsoft.Data.SqlClient";
-                                    options.ConnectionString = connectionString;
-                                });
-
-
-                                // If using Newtonsoft.Json (legacy):
-                                builder.Services.Configure<NewtonsoftJsonCodecOptions>(options =>
-                                {
-                                    options.SerializerSettings = new JsonSerializerSettings
-                                    {
-                                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                                        NullValueHandling = NullValueHandling.Include,
-                                        TypeNameHandling = TypeNameHandling.Auto
-                                    };
-                                });
-
+ 
                             });
 
 

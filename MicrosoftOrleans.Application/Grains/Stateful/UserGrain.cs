@@ -2,15 +2,10 @@
 using MicrosoftOrleans.Application.DTOs;
 using MicrosoftOrleans.Domain.Entities;
 using MicrosoftOrleans.Domain.Interfaces;
-using Orleans;
-using Orleans.Providers;
-using Orleans.Runtime;
-using Serilog;
 
 namespace MicrosoftOrleans.Application.Grains.Stateful;
 
-[StorageProvider(ProviderName = "DefaultStorage")]
-public class UserGrain : Grain<User>, IUserGrain
+public class UserGrain : Grain, IUserGrain
 {
     private readonly IEncryptionService _encryptionService;
     private readonly IPersistentState<User> _userState;
@@ -20,16 +15,6 @@ public class UserGrain : Grain<User>, IUserGrain
     {
         _encryptionService = encryptionService;
         _userState = userState;
-    }
-
-    public override async Task OnActivateAsync(CancellationToken cancellationToken)
-    {
-        await _userState.ReadStateAsync();
-
-        if (_userState.State.Id <= 0)
-        {
-            Log.Error("Failed to load state for user {UserId}", this.GetPrimaryKeyString());
-        }
     }
 
     public async Task<User?> GetUserAsync()

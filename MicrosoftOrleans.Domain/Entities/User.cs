@@ -3,24 +3,25 @@ using Orleans;
 
 namespace MicrosoftOrleans.Domain.Entities;
 
+
 [GenerateSerializer]
 public class User
 {
 
     [Id(0)]
-    public int Id { get; private set; }
+    public int Id { get; set; }
 
     [Id(1)]
-    public string UserName { get; private set; }
+    public string UserName { get; set; }
 
     [Id(2)]
-    public byte[] Password { get; private set; }
+    public byte[] Password { get; set; }
 
     [Id(3)]
-    public byte[] IV { get; private set; }
+    public byte[] IV { get; set; }
 
     [Id(4)]
-    public List<Address> Addresses { get; private set; } = new List<Address>();
+    public List<Address> Addresses { get; set; } = new List<Address>();
 
     public static User Create(string userName, string password, IEncryptionService encryptionService)
     {
