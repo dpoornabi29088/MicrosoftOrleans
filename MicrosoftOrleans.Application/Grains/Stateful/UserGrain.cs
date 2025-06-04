@@ -17,18 +17,18 @@ public class UserGrain : Grain, IUserGrain
         _userState = userState;
     }
 
-    public async Task<User?> GetUserAsync()
+    public Task<User> GetUserAsync()
     {
-        return await Task.FromResult(_userState.State);
+        return Task.FromResult(_userState.State);
     }
 
-    public async Task<bool> LoginAsync(LoginDto loginDto)
+    public Task<bool> LoginAsync(LoginDto loginDto)
     {
         var decryptedPassword = _encryptionService.Decrypt(_userState.State.Password, _userState.State.IV);
         if (decryptedPassword != loginDto.Password)
             throw new Exception("The username or password is incorrect!");
 
-        return true;
+        return Task.FromResult(true);
     }
 
     public async Task AddUserAsync(CreateUserDto userDto)

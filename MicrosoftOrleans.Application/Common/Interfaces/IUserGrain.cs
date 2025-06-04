@@ -1,13 +1,12 @@
 ﻿using MicrosoftOrleans.Application.DTOs;
 using MicrosoftOrleans.Domain.Entities;
-using Orleans;
 
 namespace MicrosoftOrleans.Application.Common.Interfaces
 {
     public interface IUserGrain : IGrainWithStringKey
     {
         Task<bool> LoginAsync(LoginDto loginDto);
-        Task<User?> GetUserAsync();
+        Task<User> GetUserAsync();
         Task AddUserAsync(CreateUserDto user);
         Task UpdateUserNameAsync(string newUserName);
         Task DeleteCurrentUserAsync();
