@@ -9,13 +9,30 @@ public class UserGrain : Grain, IUserGrain
 {
     private readonly IEncryptionService _encryptionService;
     private readonly IPersistentState<User> _userState;
+    private IStockConsumerGrain? _stockConsumer;
+    private readonly IClusterClient _clusterClient;
     public UserGrain(IEncryptionService encryptionService,
-                     [PersistentState("user", "DefaultStorage")] IPersistentState<User> userState
+                     [PersistentState("user", "DefaultStorage")] IPersistentState<User> userState,
+                     IClusterClient clusterClient
         )
     {
         _encryptionService = encryptionService;
         _userState = userState;
+        _clusterClient = clusterClient;
     }
+
+    public async Task SubscribeToStock(string symbol)
+    {
+        // Create unique consumer instance per user+symbol
+        _stockConsumer = _clusterClient.GetGrain<IStockConsumerGrain>(
+            $"{this.GetPrimaryKeyString()}_{symbol}");
+
+        await _stockConsumer.SubscribeToSymbol(symbol);
+        Console.WriteLine($"USER {this.GetPrimaryKeyString()}: Subscribed to {symbol}");
+    }
+
+    public Task<List<StockTickDto>> GetMyStockHistory()
+        => _stockConsumer?.GetHistory() ?? Task.FromResult(new List<StockTickDto>());
 
     public Task<User> GetUserAsync()
     {

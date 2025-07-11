@@ -4,9 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MicrosoftOrleans.Infrastructure;
-using Newtonsoft.Json;
 using Orleans.Configuration;
-using Orleans.Serialization;
+using Orleans.Streams;
 using Serilog;
 using System.Text.Json.Serialization;
 
@@ -39,14 +38,11 @@ class Program
                             .UseSerilog()
                             .UseOrleans(builder =>
                             {
-                                
                                 builder.ConfigureLogging(logging =>
                                 {
                                     logging.AddConsole();
                                     logging.SetMinimumLevel(LogLevel.Debug); // Capture detailed logs
                                 });
-
-                                
 
                                 var configuration = new ConfigurationBuilder()
                                                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -56,6 +52,11 @@ class Program
                                 string? connectionString = configuration.GetConnectionString("OrleansDB");
 
                                 builder.UseLocalhostClustering()
+
+                                .AddMemoryStreams("MemoryStream")//"DefaultStreamProvider") // Register the provider
+                                .AddMemoryGrainStorage("PubSubStore") // Required for pub-sub
+
+
                                 .UseDashboard(options =>
                                 {
                                     options.Host = "*"; // Allow access from any host
@@ -84,14 +85,18 @@ class Program
 
                                 builder.ConfigureServices(services =>
                                 {
+                                    services.AddSingleton<IStreamProvider>(sp =>
+                                                                            sp.GetRequiredService<IClusterClient>().GetStreamProvider("DefaultStreamProvider"));
+
                                     // Set JSON serializer options to ignore cycles
                                     services.Configure<JsonOptions>(options =>
-                                    {
-                                        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-                                    });
+                                        {
+                                            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                                        });
                                     services.AddInfrastructureServices();
+
                                 });
- 
+
                             });
 
 

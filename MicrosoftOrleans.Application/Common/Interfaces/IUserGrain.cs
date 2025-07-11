@@ -14,5 +14,7 @@ namespace MicrosoftOrleans.Application.Common.Interfaces
         Task AddAddressAsync(CreateAddressDto addressDto);
         Task UpdateAddressAsync(UpdateAddressDto updateCityDto);
         Task DeleteAddressAsync(DeleteAddressDto deleteAddressDto);
+        Task SubscribeToStock(string symbol);
+        Task<List<StockTickDto>> GetMyStockHistory();
     }
 }
