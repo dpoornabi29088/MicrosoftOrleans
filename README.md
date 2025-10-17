@@ -1,2 +1,2 @@
 # MicrosoftOrleans
-How to use Microsoft Orleans in clean architect 
+How to use Microsoft Orleans in clean architecture
