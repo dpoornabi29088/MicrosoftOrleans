@@ -10,7 +10,6 @@ using Serilog;
 using System.Text.Json.Serialization;
 
 Log.Logger = new LoggerConfiguration()
-             .MinimumLevel.Debug()
              .Enrich.FromLogContext()
              .Enrich.WithThreadId()
              .Enrich.WithProcessName()

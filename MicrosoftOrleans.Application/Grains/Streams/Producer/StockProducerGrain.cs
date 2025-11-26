@@ -11,14 +11,12 @@ public class StockProducerGrain : Grain, IStockProducerGrain
 
     public override Task OnActivateAsync(CancellationToken cancellationToken)
     {
-        // Get the stream provider only once
         _streamProvider = this.GetStreamProvider("MemoryStream");
         return Task.CompletedTask;
     }
 
     public async Task PublishUpdate(string symbol)
     {
-        // Create a stream for this symbol
         var stream = _streamProvider.GetStream<StockTickDto>(
             StreamId.Create("STOCKS", "GlobalStream"));
 
