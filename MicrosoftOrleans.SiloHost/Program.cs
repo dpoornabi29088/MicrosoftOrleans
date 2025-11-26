@@ -16,7 +16,6 @@ class Program
     static async Task Main(string[] args)
     {
         Log.Logger = new LoggerConfiguration()
-                          .MinimumLevel.Debug()
                           .Enrich.FromLogContext()
                           .Enrich.WithThreadId()
                           .Enrich.WithProcessName()
@@ -41,7 +40,12 @@ class Program
                                 builder.ConfigureLogging(logging =>
                                 {
                                     logging.AddConsole();
-                                    logging.SetMinimumLevel(LogLevel.Debug); // Capture detailed logs
+                                    logging.SetMinimumLevel(LogLevel.Error);
+                                    logging.AddFilter("Orleans.Streams", LogLevel.Error);
+                                    logging.AddFilter("Orleans.Runtime.Scheduler", LogLevel.Error);
+                                    logging.AddFilter("Orleans.Runtime.Dispatcher", LogLevel.Error);
+                                    logging.AddFilter("Orleans.Streaming", LogLevel.Error);
+
                                 });
 
                                 var configuration = new ConfigurationBuilder()
@@ -72,11 +76,6 @@ class Program
                                     options.ClusterId = "us3";
                                     options.ServiceId = "myawesomeservice";
                                 })
-                                //.AddAdoNetGrainStorageAsDefault(options =>
-                                //{
-                                //    options.Invariant = "Microsoft.Data.SqlClient";
-                                //    options.ConnectionString = connectionString;
-                                //})
                                 .AddAdoNetGrainStorage("DefaultStorage", options =>
                                 {
                                     options.Invariant = "Microsoft.Data.SqlClient";
@@ -85,9 +84,6 @@ class Program
 
                                 builder.ConfigureServices(services =>
                                 {
-                                    services.AddSingleton<IStreamProvider>(sp =>
-                                                                            sp.GetRequiredService<IClusterClient>().GetStreamProvider("DefaultStreamProvider"));
-
                                     // Set JSON serializer options to ignore cycles
                                     services.Configure<JsonOptions>(options =>
                                         {
