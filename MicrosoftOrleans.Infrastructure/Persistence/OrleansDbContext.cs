@@ -15,8 +15,6 @@ public class OrleansDbContext : DbContext, IOrleansDbContext
     {
     }
 
-    public DbSet<OrleansStorage> OrleansStorages { get; set; }
-
     public DatabaseFacade GetDatabase()
     {
         return Database;

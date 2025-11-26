@@ -6,6 +6,5 @@ namespace MicrosoftOrleans.Application.Common.Interfaces;
 
 public interface IOrleansDbContext
 {
-    DbSet<OrleansStorage> OrleansStorages { get; set; }
     DatabaseFacade GetDatabase();
 }
