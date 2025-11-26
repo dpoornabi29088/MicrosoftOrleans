@@ -10,6 +10,7 @@ using Serilog;
 using System.Text.Json.Serialization;
 
 Log.Logger = new LoggerConfiguration()
+             .MinimumLevel.Debug()
              .Enrich.FromLogContext()
              .Enrich.WithThreadId()
              .Enrich.WithProcessName()
@@ -156,10 +157,8 @@ var producer = client.GetGrain<IStockProducerGrain>("GlobalProducer");
 var user1 = client.GetGrain<IUserGrain>("User1");
 var user2 = client.GetGrain<IUserGrain>("User2");
 
-// Setup subscriptions
-await user1.SubscribeToStock("MSFT");
-await user2.SubscribeToStock("AAPL");
-
+await user1.GetMyStockHistory();
+await user2.GetMyStockHistory();
 await producer.PublishUpdate("MSFT");
 await producer.PublishUpdate("AAPL");
 await Task.Delay(2000);

@@ -5,6 +5,6 @@ namespace MicrosoftOrleans.Application.Common.Interfaces;
 
 public interface IStockConsumerGrain : IGrainWithStringKey
 {
-    Task SubscribeToSymbol(string symbol);
     Task<List<StockTickDto>> GetHistory();
+    Task ClearHistory();
 }

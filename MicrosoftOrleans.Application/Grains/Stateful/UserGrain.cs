@@ -2,14 +2,15 @@
 using MicrosoftOrleans.Application.DTOs;
 using MicrosoftOrleans.Domain.Entities;
 using MicrosoftOrleans.Domain.Interfaces;
+using Orleans.Streams;
+using Serilog;
 
 namespace MicrosoftOrleans.Application.Grains.Stateful;
 
-public class UserGrain : Grain, IUserGrain
+public class UserGrain : Grain, IUserGrain, IAsyncObserver<StockTickDto>
 {
     private readonly IEncryptionService _encryptionService;
     private readonly IPersistentState<User> _userState;
-    private IStockConsumerGrain? _stockConsumer;
     private readonly IClusterClient _clusterClient;
     public UserGrain(IEncryptionService encryptionService,
                      [PersistentState("user", "DefaultStorage")] IPersistentState<User> userState,
@@ -21,18 +22,25 @@ public class UserGrain : Grain, IUserGrain
         _clusterClient = clusterClient;
     }
 
-    public async Task SubscribeToStock(string symbol)
-    {
-        // Create unique consumer instance per user+symbol
-        _stockConsumer = _clusterClient.GetGrain<IStockConsumerGrain>(
-            $"{this.GetPrimaryKeyString()}_{symbol}");
+    private readonly List<StockTickDto> _history = new();
 
-        await _stockConsumer.SubscribeToSymbol(symbol);
-        Console.WriteLine($"USER {this.GetPrimaryKeyString()}: Subscribed to {symbol}");
+    public override async Task OnActivateAsync(CancellationToken cancellationToken)
+    {
+        var provider = this.GetStreamProvider("MemoryStream");
+        var stream = provider.GetStream<StockTickDto>("STOCKS", "GlobalStream");
+        await stream.SubscribeAsync(this);
     }
 
-    public Task<List<StockTickDto>> GetMyStockHistory()
-        => _stockConsumer?.GetHistory() ?? Task.FromResult(new List<StockTickDto>());
+    public Task OnNextAsync(StockTickDto tick, StreamSequenceToken? token = null)
+    {
+        _history.Add(tick);
+        return Task.CompletedTask;
+    }
+
+    public Task OnCompletedAsync() => Task.CompletedTask;
+    public Task OnErrorAsync(Exception ex) => Task.CompletedTask;
+
+    public Task<List<StockTickDto>> GetMyStockHistory() => Task.FromResult(_history);
 
     public Task<User> GetUserAsync()
     {
