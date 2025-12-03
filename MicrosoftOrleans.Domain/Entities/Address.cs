@@ -1,33 +1,15 @@
-﻿using Orleans;
-using System.Text.Json.Serialization;
+﻿namespace MicrosoftOrleans.Domain.Entities;
 
-namespace MicrosoftOrleans.Domain.Entities;
-
-[GenerateSerializer]
 public class Address
 {
-    [Id(0)]
     public int Id { get; private set; }
-
-    [Id(1)]
     public string Street { get; private set; }
-
-    [Id(2)]
     public string City { get; private set; }
-
-    [Id(3)]
     public string Alley { get; private set; }
-
-    [Id(4)]
     public int Plaque { get; private set; }
-
-    [Id(5)]
     public int UserId { get; private set; }
 
-    [Id(6)]
-    [JsonIgnore]
     public User User { get; private set; }
-
     public static Address Create(int userId, string city, string street, string alley, int plaque)
     {
         if (userId <= 0)

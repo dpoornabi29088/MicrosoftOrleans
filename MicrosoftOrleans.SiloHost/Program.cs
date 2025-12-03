@@ -5,7 +5,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MicrosoftOrleans.Infrastructure;
 using Orleans.Configuration;
-using Orleans.Streams;
 using Serilog;
 using System.Text.Json.Serialization;
 
@@ -37,14 +36,15 @@ class Program
                             .UseSerilog()
                             .UseOrleans(builder =>
                             {
+                               
                                 builder.ConfigureLogging(logging =>
                                 {
                                     logging.AddConsole();
-                                    logging.SetMinimumLevel(LogLevel.Error);
-                                    logging.AddFilter("Orleans.Streams", LogLevel.Error);
-                                    logging.AddFilter("Orleans.Runtime.Scheduler", LogLevel.Error);
-                                    logging.AddFilter("Orleans.Runtime.Dispatcher", LogLevel.Error);
-                                    logging.AddFilter("Orleans.Streaming", LogLevel.Error);
+                                    logging.SetMinimumLevel(LogLevel.Information);
+                                    logging.AddFilter("Orleans.Streams", LogLevel.Information);
+                                    logging.AddFilter("Orleans.Runtime.Scheduler", LogLevel.Information);
+                                    logging.AddFilter("Orleans.Runtime.Dispatcher", LogLevel.Information);
+                                    logging.AddFilter("Orleans.Streaming", LogLevel.Information);
 
                                 });
 
@@ -60,12 +60,16 @@ class Program
                                 .AddMemoryStreams("MemoryStream")//"DefaultStreamProvider") // Register the provider
                                 .AddMemoryGrainStorage("PubSubStore") // Required for pub-sub
 
-
                                 .UseDashboard(options =>
                                 {
-                                    options.Host = "*"; // Allow access from any host
-                                    options.Port = 8080; // Default dashboard port
+                                    options.Username = "dpournabi";
+                                    options.Password = "Dp9128890105";
+                                    options.Host = "*";
+                                    options.Port = 8080;
+                                    options.HostSelf = true;
+                                    options.CounterUpdateIntervalMs = 1000;
                                 })
+
                                 .UseAdoNetClustering(options =>
                                 {
                                     options.Invariant = "Microsoft.Data.SqlClient";

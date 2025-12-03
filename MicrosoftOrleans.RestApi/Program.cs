@@ -97,6 +97,7 @@ app.MapGet("/GetUser", async ([FromServices] IClusterClient clusterClient, strin
 
 app.MapPost("/AddUser", async ([FromServices] IClusterClient clusterClient, [FromBody] CreateUserDto userDto) =>
 {
+
     var userGrain = clusterClient.GetGrain<IUserGrain>(userDto.UserName);
     await userGrain.AddUserAsync(userDto);
 });

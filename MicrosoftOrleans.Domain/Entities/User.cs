@@ -1,26 +1,14 @@
 ﻿using MicrosoftOrleans.Domain.Interfaces;
-using Orleans;
 
 namespace MicrosoftOrleans.Domain.Entities;
 
 
-[GenerateSerializer]
 public class User
 {
-
-    [Id(0)]
     public int Id { get; private set; }
-
-    [Id(1)]
     public string UserName { get; private set; }
-
-    [Id(2)]
     public byte[] Password { get; private set; }
-
-    [Id(3)]
     public byte[] IV { get; private set; }
-
-    [Id(4)]
     public List<Address> Addresses { get; private set; } = new List<Address>();
 
     public static User Create(string userName, string password, IEncryptionService encryptionService)
