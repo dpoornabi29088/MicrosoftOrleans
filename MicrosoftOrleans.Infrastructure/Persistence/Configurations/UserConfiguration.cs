@@ -10,8 +10,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
-
-        builder.Ignore(x => x.Password);
-        builder.Ignore(x => x.IV);
     }
 }
